@@ -359,6 +359,7 @@ void * mainFunction(void *prhs[],int nrhs) {
 				return IDE_NULL;
 			}
 			option.extra.computeCredible=TRUE;
+		    option.extra.dumpMCMCSamples=FALSE;
 			ANS=PROTECT(BEAST2_Output_AllocMEM(&option)); nptr++;
 			void DllExport BEAST2_WinMain(VOID_PTR  option);
 			BEAST2_WinMain((BEAST2_OPTIONS_PTR)GLOBAL_OPTIONS);
@@ -627,7 +628,7 @@ SEXP DllExport sbm2(SEXP Y,SEXP opt)
 	GLOBAL_OPTIONS=(BEAST_OPTIONS_PTR)&beastOption;
 	GLOBAL_RESULT=(BEAST_RESULT_PTR)&result;
 	sbm();
-		UNPROTECT(1);
+	UNPROTECT(1);
 	return ANS;
 }
 #endif

@@ -153,7 +153,7 @@
   
   \item{gui}{ boolean. If \code{TRUE}, BEAST will be run with a GUI window to show an animation of the MCMC sampling in the model space step by step; as an experimental feature, "\code{gui=TRUE}" works only for Windows x64 systems not Windows 32 or Linux/Mac.}	
  	
-  \item{\dots}{additional parameters. There are many more settings for the implementation but not made available in the beast() interface; please use the function \code{beast123()} instead }
+  \item{\dots}{additional parameters (e.g.,  set the arg \code{mcmc.dump=TRUE} to dump MCMC samples). There are many more settings for the implementation but not made available in the beast() interface; please use the function \code{beast123()} instead }
  
 }
 
@@ -380,12 +380,12 @@ library(Rbeast)
  
  # period=deltat*number_of_datapoints_per_period = 1.0*24=24 because deltat is set to 1.0 by
  # default and this signal has 24 samples per period. 
- out = beast(Yellowstone, period=24.0, mcmc.samples=5000, tseg.min=20)
+ o = beast(Yellowstone, period=24.0, mcmc.samples=5000, tseg.min=20)
  
  # period=deltat*number_of_datapoints_per_period = 1/24*24=1.0.
- # out = beast(Yellowstone, deltat=1/24 period=1.0, mcmc.samples=5000, tseg.min=20)
+ # o = beast(Yellowstone, deltat=1/24 period=1.0, mcmc.samples=5000, tseg.min=20)
   
- out = beast( 
+ o = beast( 
      Yellowstone,            # Yellowstone: a pure numeric vector wo time info
      start   = 1981.51, 
      deltat  = 1/24,         
@@ -410,9 +410,13 @@ library(Rbeast)
      mcmc.samples   = 6000  # number of samples taken per chain
                            # total iteration: (500+3*6000)*2		 
      )
- plot(out)
- plot(out, interactive=TRUE)
- }
+ plot(o)
+ plot(o,vars=c('s','scp','t','tcp') )  # plot selected variables
+ plot(o,vars=c('t','slpsgn') )         # plot only trend and slope sign 
+ plot(o,vars=c('t','slpsgn'), relative.heights =c(.8,.2) ) # run "?plot.beast" for more info
+ plot(o, interactive=TRUE)
+ 
+}
  
 #------------------------------------Example 5----------------------------------------#
 # Run an interactive GUI to visualize how BEAST is samplinig from the possible model 

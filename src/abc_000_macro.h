@@ -199,7 +199,7 @@
 			# define ENABLE_WARNING(gcc_option,clang_option,msvc_unused) DIAG_PRAGMA(GCC,warning DIAG_JOINSTR(-W,gcc_option))
 		#endif
 	#endif
-#if defined(COMPILER_GCC)  
+#if defined(COMPILER_GCC) 
 	#define  DISABLE_MANY_WARNINGS   \
 	DISABLE_WARNING(unknown-pragmas,unknown-pragmas,NOT_USED) \
 	DISABLE_WARNING(pragmas,pragmas,NOT_USED) \
@@ -252,7 +252,7 @@
 	ENABLE_WARNING(unused-variable,unused-variable,NOT_USED)  \
 	ENABLE_WARNING(pragmas,pragmas,NOT_USED) \
 	ENABLE_WARNING(unknown-pragmas,unknown-pragmas,NOT_USED) 
-#elif defined(COMPILER_CLANG)  
+#elif defined(COMPILER_CLANG)||1
 	#define  DISABLE_MANY_WARNINGS  \
 	DISABLE_WARNING(unknown-pragmas,unknown-pragmas,NOT_USED)  \
 	DISABLE_WARNING(pragmas,pragmas,NOT_USED) \
@@ -275,8 +275,10 @@
     DISABLE_WARNING(uninitialized,uninitialized,NOT_USED)\
     DISABLE_WARNING(pedantic,pedantic,NOT_USED) \
     DISABLE_WARNING(typedef-redefinition,typedef-redefinition,NOT_USED) \
-    DISABLE_WARNING(div-by-zero,div-by-zero,NOT_USED)
+    DISABLE_WARNING(div-by-zero,div-by-zero,NOT_USED) \
+	DISABLE_WARNING(unused-but-set-variable,unused-but-set-variable,NOT_USED) 
 	#define  ENABLE_MANY_WARNINGS  \
+    ENABLE_WARNING(unused-but-set-variable,unused-but-set-variable,NOT_USED) \
     ENABLE_WARNING(div-by-zero,div-by-zero,NOT_USED) \
     ENABLE_WARNING(typedef-redefinition,typedef-redefinition,NOT_USED)\
     ENABLE_WARNING(pedantic,pedantic,NOT_USED)\

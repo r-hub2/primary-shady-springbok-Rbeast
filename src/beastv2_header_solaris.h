@@ -103,6 +103,7 @@ typedef struct BEAST2_EXTRA {
 	Bool tallyPosNegOutliers;
 	Bool  printOptions;
 	Bool  printProgressBar;
+	Bool dumpMCMCSamples;
 } BEAST2_EXTRA,* _restrict BEAST2_EXTRA_PTR;
 struct BEAST2_RESULT;
 typedef struct BEAST2_RESULT BEAST2_RESULT,* _restrict BEAST2_RESULT_PTR;
@@ -192,6 +193,7 @@ typedef struct BEAST2_RESULT {
 	F32PTR  opos_cp,oneg_cp;
 	F32PTR  opos_cpPr,oneg_cpPr;	
 	F32PTR  opos_cpCI,oneg_cpCI;
+	F32PTR  smcmc,tmcmc,omcmc;
 } BEAST2_RESULT,* _restrict BEAST2_RESULT_PTR;
 typedef struct CORESULT {
 	I32PTR xNProb,xProb,xorder;

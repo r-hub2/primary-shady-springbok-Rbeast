@@ -144,7 +144,8 @@ int beast2_main_corev4_bic(int _whichCritia_)   {
 	AllocateXXXMEM(&Xt_mars,&Xnewterm,&Xt_zeroBackup,&MODEL,opt,&MEM);
 	BEAST2_YINFO     yInfo;
 	AllocateYinfoMEM(&yInfo,opt,&MEM);
-	const BEAST2_RESULT resultChain={ NULL,},result={ NULL,};
+	const BEAST2_RESULT resultChain={ NULL,};
+	BEAST2_RESULT       result={ NULL,};
 	BEAST2_Result_AllocMEM(&resultChain,opt,&MEM); 	
 	BEAST2_Result_AllocMEM(&result,opt,&MEM);
 	const   I32  NumCIVars=MODEL.NUMBASIS+opt->extra.computeTrendSlope;
@@ -250,6 +251,11 @@ int beast2_main_corev4_bic(int _whichCritia_)   {
 			r_viRngUniformBits32(VSL_RNG_METHOD_UNIFORMBITS32_STD,stream,MAX_RAND_NUM,(U32PTR)RND16);
 			r_viRngUniformBits32(VSL_RNG_METHOD_UNIFORMBITS32_STD,stream,MAX_RAND_NUM,(U32PTR)RND08);
 			r_vsRngGamma(VSL_RNG_METHOD_GAMMA_GNORM_ACCURATE,stream,MAX_RAND_NUM,RNDGAMMA,( hyperPar.alpha_1+yInfo.n * 0.5f),0,1);
+		}
+		if (extra.dumpMCMCSamples) {
+			result.smcmc=opt->io.out.result->smcmc;
+			result.tmcmc=opt->io.out.result->tmcmc;
+			result.omcmc=opt->io.out.result->omcmc;
 		}
 		BEAST2_Result_FillMEM(&result,opt,0);		
 		ReInit_PrecValues(&MODEL,opt);
@@ -429,7 +435,7 @@ int beast2_main_corev4_bic(int _whichCritia_)   {
 					r_cblas_sgemm(CblasColMajor,CblasTrans,CblasNoTrans,q,q,q,1.f,MODEL.sig2,q,MODEL.sig2,q,0.f,MEMBUF,q);
 					r_ippsAdd_32f_I(MEMBUF,resultChain.sig2,q*q);
 				}
-				F32PTR BETA=(extra.useMeanOrRndBeta==0)||1L  ? MODEL.curr.beta_mean : MODEL.beta;
+				F32PTR BETA=(extra.useMeanOrRndBeta==0)||1L==1L  ? MODEL.curr.beta_mean : MODEL.beta;
 				{
 					 F32PTR MEMBUF1=Xnewterm;
 					for (I32 i=0; i < MODEL.NUMBASIS;++i) 
@@ -574,6 +580,21 @@ int beast2_main_corev4_bic(int _whichCritia_)   {
 							InsertNewRowToUpdateCI(&ciParam,&ci[i]);						
 					}					
 				} 
+				if (extra.dumpMCMCSamples) {
+					F32PTR cmpnts=Xnewterm;
+					if (result.smcmc) {
+						f32_copy(cmpnts,result.smcmc,N*q);
+						cmpnts+=N*q;
+						result.smcmc+=N * q;
+					}
+					f32_copy(cmpnts,result.tmcmc,N* q);
+					cmpnts+=N * q;
+					result.tmcmc+=N * q;
+					if (result.omcmc) {
+						f32_copy(cmpnts,result.omcmc,N * q);
+						result.omcmc+=N * q;
+					}
+				}
 				if (extra.printProgressBar && NUM_PIXELS==1 && sample%1000==0) {
 					F32 frac=(F32)(chainNumber * MCMC_SAMPLES+sample)/(MCMC_SAMPLES * MCMC_CHAINNUM);
 					printProgress1(frac,extra.consoleWidth,Xnewterm,0);
@@ -620,8 +641,8 @@ int beast2_main_corev4_bic(int _whichCritia_)   {
 						i32_to_f32_scaleby_inplace(resultChain.tncpPr,(tMAXNUMKNOT+1),inv_sample);
 						i32_to_f32_scaleby_inplace(resultChain.tcpOccPr,N,inv_sample);
 						for (int i=0; i < q; i++) {
-							F32 offset=0.0f;
-							f32_sx_sxx_to_avgstd_inplace(resultChain.tY+i * N,resultChain.tSD+i * N,sample,yInfo.sd[i],yInfo.mean[i],N);
+							F32 offset=yInfo.mean[i];
+							f32_sx_sxx_to_avgstd_inplace(resultChain.tY+i * N,resultChain.tSD+i * N,sample,yInfo.sd[i],offset,N);
 						}
 						if (extra.computeTrendOrder) 	i32_to_f32_scaleby_inplace(resultChain.torder,N,inv_sample);	
 						if (extra.computeTrendSlope) {
@@ -784,7 +805,7 @@ int beast2_main_corev4_bic(int _whichCritia_)   {
 			#define _q(x)      r_ippsMulC_32f_I(invChainNumber,(F32PTR)result.x,q)
 			#define _q2(x)     r_ippsMulC_32f_I(invChainNumber,(F32PTR)result.x,q*q)
 			#define _2N(x)     r_ippsMulC_32f_I(invChainNumber,(F32PTR)result.x,N+N)
-			#define _2Nq(x)     r_ippsMulC_32f_I(invChainNumber,(F32PTR)result.x,N*q+N*q)
+			#define _2Nq(x)    r_ippsMulC_32f_I(invChainNumber,(F32PTR)result.x,N*q+N*q)
 			#define _skn_1(x)  r_ippsMulC_32f_I(invChainNumber,(F32PTR)result.x,sMAXNUMKNOT+1)
 			#define _tkn_1(x)  r_ippsMulC_32f_I(invChainNumber,(F32PTR)result.x,tMAXNUMKNOT+1)
 			#define _okn_1(x)  r_ippsMulC_32f_I(invChainNumber,(F32PTR)result.x,oMAXNUMKNOT+1)
@@ -793,9 +814,9 @@ int beast2_main_corev4_bic(int _whichCritia_)   {
 			_q2(sig2);
 			if (MODEL.sid >=0||MODEL.vid>0) {
 				_1(sncp); _skn_1(sncpPr);	     _N(scpOccPr); _Nq(sY); _Nq(sSD); 
-				if (extra.computeSeasonOrder)    _N(sorder);
+				if (extra.computeSeasonOrder)   { _N(sorder); }
 				if (extra.computeSeasonAmp)     {_N(samp),_N(sampSD);}
-				if (extra.computeCredible)       _2Nq(sCI);
+				if (extra.computeCredible)      { _2Nq(sCI); }
 				*result.sncp_mode=f32_maxidx(result.sncpPr,sMAXNUMKNOT+1,&maxncpProb);
 				*result.sncp_median=GetPercentileNcp(result.sncpPr,sMAXNUMKNOT+1,0.5);
 				*result.sncp_pct90=GetPercentileNcp(result.sncpPr,sMAXNUMKNOT+1,0.9);
@@ -803,9 +824,9 @@ int beast2_main_corev4_bic(int _whichCritia_)   {
 			}
 			if (MODEL.tid >=0) {
 				_1(tncp); _tkn_1(tncpPr);	     _N(tcpOccPr); _Nq(tY); _Nq(tSD); 
-				if (extra.computeTrendOrder)     _N(torder);
+				if (extra.computeTrendOrder)    { _N(torder); }
 				if (extra.computeTrendSlope)    { _N(tslp),_N(tslpSD),_N(tslpSgnPosPr),_N(tslpSgnZeroPr);}
-				if (extra.computeCredible)       _2Nq(tCI);
+				if (extra.computeCredible)      { _2Nq(tCI); }
 				*result.tncp_mode=f32_maxidx(result.tncpPr,tMAXNUMKNOT+1,&maxncpProb);
 				*result.tncp_median=GetPercentileNcp(result.tncpPr,tMAXNUMKNOT+1,0.5);
 				*result.tncp_pct90=GetPercentileNcp(result.tncpPr,tMAXNUMKNOT+1,0.9);
@@ -1012,6 +1033,32 @@ int beast2_main_corev4_bic(int _whichCritia_)   {
 			I32  Nq=N * q;  
 			memcpy(result.data,Xnewterm,sizeof(F32)* Nq);
 		}
+		if (opt->extra.dumpMCMCSamples) {
+			result.smcmc=opt->io.out.result->smcmc;
+			result.tmcmc=opt->io.out.result->tmcmc;
+			result.omcmc=opt->io.out.result->omcmc;
+			I32  N=opt->io.N;
+			for (I32 i=0; i < q; i++) {
+				if (result.smcmc) {
+					f32_mul_val_inplace(yInfo.sd[i],result.smcmc,N* MCMC_SAMPLES* MCMC_CHAINNUM);
+					result.smcmc+=N * MCMC_SAMPLES * MCMC_CHAINNUM;
+				}				
+				if (result.omcmc) {
+					f32_mul_val_inplace(yInfo.sd[i],result.omcmc,N* MCMC_SAMPLES* MCMC_CHAINNUM);
+					result.omcmc+=N * MCMC_SAMPLES * MCMC_CHAINNUM;
+				}				
+				f32_scale_inplace(yInfo.sd[i],yInfo.mean[i],result.tmcmc,N * MCMC_SAMPLES * MCMC_CHAINNUM);
+				result.tmcmc+=N * MCMC_SAMPLES * MCMC_CHAINNUM;
+			}		
+			if (opt->io.out.dtype==DATA_DOUBLE) {	
+				result.smcmc=opt->io.out.result->smcmc;
+				result.tmcmc=opt->io.out.result->tmcmc;
+				result.omcmc=opt->io.out.result->omcmc;
+				if (result.smcmc) f32_to_f64_inplace(result.smcmc,N * MCMC_SAMPLES * MCMC_CHAINNUM * q);
+				if (result.omcmc) f32_to_f64_inplace(result.smcmc,N * MCMC_SAMPLES * MCMC_CHAINNUM * q);
+				f32_to_f64_inplace(result.tmcmc,N* MCMC_SAMPLES* MCMC_CHAINNUM* q);
+			}
+		}
   		if (!skipCurrentPixel) { 
 			I32  N=opt->io.N ;
 			I32  Nq=N * q;  
@@ -1048,7 +1095,7 @@ int beast2_main_corev4_bic(int _whichCritia_)   {
 			int N=opt->io.N;
 			for (int i=0; i < q;++i) {
 				if (yInfo.Yseason) {
-						r_ippsAdd_32f_I(yInfo.Yseason+N*i,result.sY+N* i,N);
+					r_ippsAdd_32f_I(yInfo.Yseason+N*i,result.sY+N* i,N);
 					if (result.sCI) {
 						r_ippsAdd_32f_I(yInfo.Yseason+N * i,result.sCI+2*N*i,N);
 						r_ippsAdd_32f_I(yInfo.Yseason+N * i,result.sCI+2*N*i+N,N);
@@ -1057,7 +1104,7 @@ int beast2_main_corev4_bic(int _whichCritia_)   {
 						r_ippsAdd_32f_I(yInfo.Yseason+N * i,result.data+N*i,N);
 				}
 				if (yInfo.Ytrend) {
-						r_ippsAdd_32f_I(yInfo.Ytrend+N * i,result.tY+N*i,N);
+					r_ippsAdd_32f_I(yInfo.Ytrend+N * i,result.tY+N*i,N);
 					if (result.tCI) {
 						r_ippsAdd_32f_I(yInfo.Ytrend+N * i,result.tCI+2*N*i,N);
 						r_ippsAdd_32f_I(yInfo.Ytrend+N * i,result.tCI+2*N*i+N,N);

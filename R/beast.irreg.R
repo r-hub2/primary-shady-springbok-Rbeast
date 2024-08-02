@@ -24,9 +24,8 @@ beast.irreg <- function(
 					... )
 {
 
-  #time=df$date
-  #deltat=1/24
-  #freq   = 24
+  #time   = df$date
+  #deltat = 1/24  
   #season ='harmonic';
   #scp.minmax=c(0,10); sorder.minmax=c(0,5); sseg.min=3  
   #tcp.minmax=c(0,10); torder.minmax=c(0,1); tseg.min=3 
@@ -64,7 +63,6 @@ beast.irreg <- function(
  
   season        = match.arg(season)
   precPriorType = match.arg(precPriorType)
- # tmplist=list(...)
 #......Start of displaying 'MetaData' ......
    metadata = list()
    metadata$isRegularOrdered = FALSE
@@ -156,7 +154,10 @@ beast.irreg <- function(
    extra$consoleWidth         = 0
    extra$quiet                 = quiet
    #extra$numThreadsPerCPU     = 2
-   #extra$numParThreads        = 0
+   #extra$numParThreads        = 0   
+   if ( hasArg('mcmc.dump') ) {    
+        extra$dumpMCMCSamples = list(...)[['mcmc.dump']] 
+   }   
  
   if (gui && !base::interactive()) {
 	warning('R is not running in the inteactive mode. Resetting gui to FALSE.');

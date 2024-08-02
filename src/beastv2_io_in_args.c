@@ -760,6 +760,7 @@ static int  GetArg_4th_EXTRA__(VOIDPTR prhs[],int nrhs,BEAST2_EXTRA_PTR extra,I3
 		I08 tallyPosNegOutliers;
 		I08  printOptions;
 		I08  printProgressBar;
+		I08 dumpMCMCSamples;
 	} m={0,};
 	if (nrhs < 6) 
 		memset(&m,1L,sizeof(struct OUTFLAGS_MISSING));	
@@ -771,14 +772,15 @@ static int  GetArg_4th_EXTRA__(VOIDPTR prhs[],int nrhs,BEAST2_EXTRA_PTR extra,I3
 		}
 		else {
 			VOIDPTR tmp;
-			o.whichOutputDimIsTime=(tmp=GetField123Check(S,"whichOutputDimIsTime",2)) ?	GetScalar(tmp) : (m.whichOutputDimIsTime=1);
+			o.whichOutputDimIsTime=(tmp=GetField123Check(S,"whichOutputDimIsTime",2)) ? GetScalar(tmp) : (m.whichOutputDimIsTime=1);
 			o.removeSingletonDims=(tmp=GetField123Check(S,"removeSingletonDims",8)) ? GetScalar(tmp) : (m.removeSingletonDims=1);			
-			o.numThreadsPerCPU=(tmp=GetField123Check(S,"numThreadsPerCPU",4)) ? GetScalar(tmp) : (m.numThreadsPerCPU=1);
-			o.numParThreads=(tmp=GetField123Check(S,"numParThreads",4)) ?			GetScalar(tmp) : (m.numParThreads=1);
-			o.numCPUCoresToUse=(tmp=GetField123Check(S,"numCPUCoresToUse",4)) ?		GetScalar(tmp) : (m.numCPUCoresToUse=1);
-			o.consoleWidth=(tmp=GetField123Check(S,"consoleWidth",2)) ?			GetScalar(tmp) : (m.consoleWidth=1);
-			o.dumpInputData=(tmp=GetField123Check(S,"dumpInputData",2)) ? GetScalar(tmp) : (m.dumpInputData=1);
-			o.smoothCpOccPrCurve=(tmp=GetField123Check(S,"smoothCpOccPrCurve",2)) ? GetScalar(tmp) : (m.smoothCpOccPrCurve=1);
+			o.numThreadsPerCPU=(tmp=GetField123Check(S,"numThreadsPerCPU",4))    ? GetScalar(tmp) : (m.numThreadsPerCPU=1);
+			o.numParThreads=(tmp=GetField123Check(S,"numParThreads",4))       ? GetScalar(tmp) : (m.numParThreads=1);
+			o.numCPUCoresToUse=(tmp=GetField123Check(S,"numCPUCoresToUse",4))    ? GetScalar(tmp) : (m.numCPUCoresToUse=1);
+			o.consoleWidth=(tmp=GetField123Check(S,"consoleWidth",2))         ? GetScalar(tmp) : (m.consoleWidth=1);
+			o.dumpInputData=(tmp=GetField123Check(S,"dumpInputData",5))        ? GetScalar(tmp) : (m.dumpInputData=1);
+			o.smoothCpOccPrCurve=(tmp=GetField123Check(S,"smoothCpOccPrCurve",2))   ? GetScalar(tmp) : (m.smoothCpOccPrCurve=1);
+			o.dumpMCMCSamples=(tmp=GetField123Check(S,"dumpMCMCSamples",7))     ? GetScalar(tmp) : (m.dumpMCMCSamples=1);
 			#define _1(x)       o.x=(tmp=GetFieldCheck(S,#x))? GetScalar(tmp): (m.x=1)
 			#define _2(x,y)     _1(x);_1(y)
 			#define _3(x,y,z)   _1(x);_2(y,z)
@@ -821,6 +823,7 @@ static int  GetArg_4th_EXTRA__(VOIDPTR prhs[],int nrhs,BEAST2_EXTRA_PTR extra,I3
 	if (o.tallyIncDecTrendJump)  o.computeTrendChngpt=1,o.computeTrendSlope=1;
 	if (o.tallyPosNegOutliers)   o.computeOutlierChngpt=1;
 	if (m.useMeanOrRndBeta)      o.useMeanOrRndBeta=0;
+	if (m.dumpMCMCSamples)       o.dumpMCMCSamples=0;
 	return 1;
 #undef o
 }
@@ -948,6 +951,9 @@ I32 PostCheckArgs(A(OPTIONS_PTR) opt) {
 	opt->io.out.whichDimIsTime=opt->extra.whichOutputDimIsTime;
 	if (opt->prior.precPriorType==ComponentWise && opt->prior.numBasis==1) {
 		opt->prior.precPriorType=UniformPrec;
+	}
+	if (opt->io.numOfPixels > 1) {
+		opt->extra.dumpMCMCSamples=0;
 	}
 	return 1;
 }

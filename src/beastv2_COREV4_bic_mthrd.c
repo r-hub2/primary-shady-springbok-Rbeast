@@ -434,7 +434,7 @@ int beast2_main_core_bic_mthrd(void* dummy)
 					r_cblas_sgemm(CblasColMajor,CblasTrans,CblasNoTrans,q,q,q,1.f,MODEL.sig2,q,MODEL.sig2,q,0.f,MEMBUF,q);
 					r_ippsAdd_32f_I(MEMBUF,resultChain.sig2,q*q);
 				}
-				F32PTR BETA=(extra.useMeanOrRndBeta==0)||1L  ? MODEL.curr.beta_mean : MODEL.beta;
+				F32PTR BETA=(extra.useMeanOrRndBeta==0)||1L==1L  ? MODEL.curr.beta_mean : MODEL.beta;
 				{
 					 F32PTR MEMBUF1=Xnewterm;
 					for (I32 i=0; i < MODEL.NUMBASIS;++i) 

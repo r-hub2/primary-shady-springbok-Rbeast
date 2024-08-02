@@ -183,7 +183,7 @@ x
   
   \item{gui}{ boolean. If \code{TRUE}, BEAST will be run in a GUI demonstration mode, with a GUI window to show an animation of the MCMC sampling in the model space step by step. Note that "\code{gui=TRUE}" works only for Windows x64 systems not Windows 32 or Linux/Mac systems.}	
  	
-  \item{\dots}{additional parameters. There are many more settings for the implementation but not made available in the beast() interface; please use the function \code{beast123()} instead }
+  \item{\dots}{additional parameters (e.g.,  set the arg \code{mcmc.dump=TRUE} to dump MCMC samples). There are many more settings for the implementation but not made available in the beast() interface; please use the function \code{beast123()} instead }
  
 }
 

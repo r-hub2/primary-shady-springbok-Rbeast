@@ -3,7 +3,7 @@
 
 ##    BEAST:  A Bayesian Ensemble Algorithm for Change-Point Detection and Time Series Decomposition
 
-**BEAST (Bayesian Estimator of Abrupt change, Seasonality, and Trend) is a fast, generic Bayesian model averaging algorithm to decompose time series or 1D sequential data into individual components, such as abrupt changes, trends, and periodic/seasonal variations, as described in <ins>[Zhao et al. (2019)](https://go.osu.edu/beast2019)</ins>. BEAST is useful for *changepoint detection (e.g., breakpoints, structural breaks, regime shifts, or anomalies), trend analysis, time series decomposition (e.g., trend vs seasonality), time series segmentation, and interrupted time series analysis*. See a list of <a href="#publicationid"> selected studies using BEAST </a>.**
+**BEAST (Bayesian Estimator of Abrupt change, Seasonality, and Trend) is a fast, generic Bayesian model averaging algorithm to decompose time series or 1D sequential data into individual components, such as abrupt changes, trends, and periodic/seasonal variations, as described in <ins>[Zhao et al. (2019)](https://go.osu.edu/beast2019)</ins>. BEAST is useful for *changepoint detection (e.g., breakpoints, structural breaks,joinpoints, regime shifts, or anomalies), trend analysis, time series decomposition (e.g., trend vs seasonality), time series segmentation, and interrupted time series analysis*. See a list of <a href="#publicationid"> selected studies using BEAST </a>.**
 
 
 **Quick Installation**
@@ -76,7 +76,7 @@ from **GitHub**: The latest R versions are also available here at [GitHub](https
 <p  align="left">   
 <a href= "https://cran.r-project.org/package=Rbeast">
 <img src="https://www.r-pkg.org/badges/version/Rbeast?color=green"  height="20">  
-<img src="http://cranlogs.r-pkg.org/badges/grand-total/Rbeast?color=green" height="20">  
+<img src="https://cranlogs.r-pkg.org/badges/grand-total/Rbeast?color=green" height="20">  
 <img src="https://img.shields.io/static/v1?style=plastic&logo=r&label=Rbeast%20%20&message= In CRAN-Task-View&color=brightgreen" height="20">
 </a>
 </p>   
@@ -252,6 +252,12 @@ Despite being published originally for ecological and enviornmental applications
 |Anthropocene Science|*Thomas, E.R., Vladimirova, D.O., Tetzner, D.R., Emanuelsson, D.B., Humby, J., Turner, S.D., Rose, N.L., Roberts, S.L., Gaca, P. and Cundy, A.B., 2023. The Palmer ice core as a candidate Global boundary Stratotype Section and Point for the Anthropocene series. The Anthropocene Review, p.20530196231155191.*|
 |Biomedical Engineering|*Saghbiny, E., Da Silva, J., Leblanc, L., Bobbio, C., Morel, G.G., Vialle, R. and Tamadazte, B., 2023, September. Breach detection in spine surgery based on cutting torque with ex-vivo experimental validation. In Conference on New Technologies for Computer and Robot Assisted Surgery.*|
 |Political Science|*Reuning, K., Whitesell, A. and Hannah, A.L., 2022. [Facebook algorithm changes may have amplified local republican parties](https://doi.org/10.1177/20531680221103809). Research & Politics, 9(2), p.20531680221103809.*|
+|Food Science|*Zaytsev, V., Tutukina, M.N., Chetyrkina, M.R., Shelyakin, P.V., Ovchinnikov, G., Satybaldina, D., Kondrashov, V.A., Bandurist, M.S., Seilov, S., Gorin, D.A. and Fedorov, F.S., 2024. Monitoring of meat quality and change-point detection by a sensor array and profiling of bacterial communities. Analytica Chimica Acta, p.343022.*|
+|Business Science|*Li, Z. and Tian, Y., 2024. Skewed multifractal cross-correlation between price and volume during the COVID-19 pandemic: Evidence from China and European carbon markets. Applied Energy, 371, p.123716.*|
+|Ecography|*Smith, M.M. and Pauli, J.N., 2024. Small but connected islands can maintain populations and genetic diversity under climate change. Ecography, p.e07119.*|
+|Cognitive Science|*Prein, J.C., Maurits, L., Werwach, A., Haun, D.B. and Bohn, M., 2024. Variation in gaze following across the life span: A process‐level perspective. Developmental Science, p.e13546.*|
+|Neuroscience|*Aqel, K., Wang, Z., Peng, Y.B. and Maia, P.D., 2024. Reconstructing rodent brain signals during euthanasia with eigensystem realization algorithm (ERA). Scientific Reports, 14(1), p.12261.*|
+|Glaciology|*Ramón, C.L., Rueda, F.J., Priet‐Mahéo, M.C. and Andradóttir, H., 2024. The impact of deep glacial water diversions from a hydroelectric reservoir in the thermal dynamics of a sub-arctic lake. Journal of Hydrology, 635, p.131081.*|
 |Geography|*Lyu, R., Pang, J., Zhang, J. and Zhang, J., 2024. The impacts of disturbances on mountain ecosystem services: Insights from BEAST and Bayesian network. Applied Geography, 162, p.103143.*|
 |Watershed Hydrology|*Sakizadeh, M., Milewski, A. and Sattari, M.T., 2023. Analysis of Long-Term Trend of Stream Flow and Interaction Effect of Land Use and Land Cover on Water Yield by SWAT Model and Statistical Learning in Part of Urmia Lake Basin, Northwest of Iran. Water, 15(4), p.690.*|
 |Oceanography|*Oehlert, A.M., Hunter, H., Riopelle, C. and Purkis, S.J., 2023. Perturbation to North Atlantic Ocean‐Climate Dynamics Tripled Whitings Mud Production in the Bahamas. Journal of Geophysical Research: Oceans, 128(11), p.e2023JC020021.*|
@@ -259,9 +265,12 @@ Despite being published originally for ecological and enviornmental applications
 |Social Media|*Barrie, C., Ketchley, N., Siegel, A. and Bagdouri, M., 2023. Measuring Media Freedom.*|
 |Political Economy|*Benchimol, J. and Palumbo, L., 2023. Sanctions and Russian Online Prices.*|
 |Physiology|*Shakeel, M., Brockmann, A. Temporal effects of sugar intake on fly local search and honey bee dance behaviour. J Comp Physiol A (2023). https://doi.org/10.1007/s00359-023-01670-6*|
+|Injuries & Hazards|*Delavary, M., Kalantari, A.H., Mohammadzadeh Moghaddam, A., Fakoor, V., Lavallière, M. and Wilhelm Siebert, F., 2024. Road traffic mortality in Iran: longitudinal trend and seasonal analysis, March 2011-February 2020. International journal of injury control and safety promotion, 31(1), pp.125-137.*|
+|Civil Engineering|*Langtry, M., Wichitwechkarn, V., Ward, R., Zhuang, C., Kreitmair, M.J., Makasis, N., Conti, Z.X. and Choudhary, R., 2024. Impact of data for forecasting on performance of model predictive control in buildings with smart energy storage. Energy and Buildings, p.114605.*|
 |Ichthyology|*Kaeding, L.R., 2023. Climate-change and nonnative-piscivore impacts on a renowned Oncorhynchus metapopulation, requirements for metapopulation recovery, and similarities to anadromous salmonid metapopulations. Aquatic Sciences, 85(4), p.88.*|
 |Remote Sensing|*Mulverhill, C., Coops, N.C. and Achim, A., 2023. Continuous monitoring and sub-annual change detection in high-latitude forests using Harmonized Landsat Sentinel-2 data. ISPRS Journal of Photogrammetry and Remote Sensing, 197, pp.309-319.*|
 |Physical Chemistry|*Faran, M. and Bisker, G., 2023. Nonequilibrium Self-Assembly Time Forecasting by the Stochastic Landscape Method. The Journal of Physical Chemistry B.*|
+|Mechanobiology|*Faran, M., Ray, D., Nag, S., Raucci, U., Parrinello, M. and Bisker, G., 2024. A Stochastic Landscape Approach for Protein Folding State Classification. Journal of Chemical Theory and Computation.*|
 |Analytical Chemistry|*Simic, M., Neuper, C., Hohenester, U. and Hill, C., 2023. Optofluidic force induction as a process analytical technology. Analytical and Bioanalytical Chemistry, pp.1-11.*|
 | Ecosystem Sciences | *Lyu, R., Zhao, W., Pang, J., Tian, X., Zhang, J. and Wang, N., 2022. [Towards a sustainable nature reserve management: Using Bayesian network to quantify the threat of disturbance to ecosystem services](https://www.sciencedirect.com/science/article/pii/S2212041622000791). Ecosystem Services, 58, p.101483.* |
 | Environmental Sciences| *Nickerson, S., Chen, G., Fearnside, P., Allan, C.J., Hu, T., de Carvalho, L.M. and Zhao, K., 2022. [Forest loss is significantly higher near clustered small dams than single large dams per megawatt of hydroelectricity installed in the Brazilian Amazon](https://iopscience.iop.org/article/10.1088/1748-9326/ac8236/meta). Environmental Research Letters.*|

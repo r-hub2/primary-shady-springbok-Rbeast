@@ -5,8 +5,8 @@ beast <- function(  y,
 					period     = NULL,                  
 					scp.minmax = c(0,10), sorder.minmax=c(0,5), 
 					tcp.minmax = c(0,10), torder.minmax=c(0,1), 
-					sseg.min = NULL, sseg.leftmargin = NULL,  sseg.rightmargin = NULL, 
-					tseg.min = NULL, tseg.leftmargin = NULL,  tseg.rightmargin = NULL, 
+					sseg.min   = NULL, sseg.leftmargin = NULL,  sseg.rightmargin = NULL, 
+					tseg.min   = NULL, tseg.leftmargin = NULL,  tseg.rightmargin = NULL, 
 					method         = c('bayes','bic', 'aic','aicc','hic','bic0.25','bic0.5','bic1.5','bic2'),
 					detrend        = FALSE, 
 					deseasonalize  = FALSE,
@@ -218,7 +218,10 @@ beast <- function(  y,
    }  else {
         extra$useMeanOrRndBeta=TRUE
    }
-      
+   if ( hasArg('mcmc.dump') ) {    
+        extra$dumpMCMCSamples = list(...)[['mcmc.dump']] 
+   }
+   
    #extra$numThreadsPerCPU     = 2
    #extra$numParThreads        = 0
  

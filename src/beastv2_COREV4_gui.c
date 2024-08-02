@@ -82,9 +82,15 @@ void beast2_main_corev4_gui(void) {
 	AllocateXXXMEM(&Xt_mars,&Xnewterm,&Xt_zeroBackup,&MODEL,opt,&MEM);
 	BEAST2_YINFO     yInfo;
 	AllocateYinfoMEM(&yInfo,opt,&MEM);
-	const BEAST2_RESULT resultChain={ NULL,},result={ NULL,};
-	BEAST2_Result_AllocMEM(&resultChain,opt,&MEM); 	
+	const BEAST2_RESULT resultChain={ NULL,};
+	BEAST2_RESULT       result={ NULL,};
+	BEAST2_Result_AllocMEM(&resultChain,opt,&MEM);
 	BEAST2_Result_AllocMEM(&result,opt,&MEM);
+	if (extra.dumpMCMCSamples) {
+		result.smcmc=opt->io.out.result->smcmc;
+		result.tmcmc=opt->io.out.result->tmcmc;
+		result.omcmc=opt->io.out.result->omcmc;
+	}
 	const   I32  NumCIVars=MODEL.NUMBASIS+opt->extra.computeTrendSlope;
 	 CI_PARAM     ciParam={ 0,};
 	CI_RESULT    ci[MAX_NUM_BASIS+1];
@@ -697,8 +703,8 @@ void beast2_main_corev4_gui(void) {
 						i32_to_f32_scaleby_inplace(resultChain.tncpPr,(tMAXNUMKNOT+1),inv_sample);
 						i32_to_f32_scaleby_inplace(resultChain.tcpOccPr,N,inv_sample);
 						for (int i=0; i < q; i++) {
-							F32 offset=0.0f;
-							f32_sx_sxx_to_avgstd_inplace(resultChain.tY+i * N,resultChain.tSD+i * N,sample,yInfo.sd[i],yInfo.mean[i],N);
+							F32 offset=yInfo.mean[i];
+							f32_sx_sxx_to_avgstd_inplace(resultChain.tY+i * N,resultChain.tSD+i * N,sample,yInfo.sd[i],offset,N);
 						}
 						if (extra.computeTrendOrder) 	i32_to_f32_scaleby_inplace(resultChain.torder,N,inv_sample);	
 						if (extra.computeTrendSlope) {
