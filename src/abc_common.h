@@ -13,8 +13,8 @@ extern I32     strmatch(char const* _restrict full,char const* _restrict part);
 extern F32     DeterminePeriod(F32PTR Y,I32 N);
 extern I32     FindChangepoint(F32PTR prob,F32PTR mem,F32 threshold,I32PTR cpt,F32PTR cptCI,I32 N,I32 minSepDist,I32 maxCptNumber);
 extern I32     FindChangepoint_LeftRightMargins(F32PTR prob,F32PTR mem,F32 threshold,I32PTR cpt,F32PTR cptCI,I32 N,I32 minSepDist,I32 maxCptNumber,I32 leftMargin,I32 rightMargin);
-extern void SetupRoutines_AutoByCPU(Bool quiet);
-extern void SetupRoutines_UserChoice(int avxOption);
+extern int  GetNativeCPUType(void);
+extern void SetupRoutines_ByCPU(int cputype);
 #define    CopyInsertNewElement(SRC,NSRC,DST,newPos,newValue,T)                                     \
                          memcpy(DST,SRC,(newPos-1)*sizeof(T));        \
 	                     *((T*)DST+newPos-1L)=newValue;                                             \

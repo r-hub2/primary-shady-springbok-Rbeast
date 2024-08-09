@@ -1,7 +1,7 @@
 Package: Rbeast
 Type: Package
 Version: 1.0.1
-Date: 2024-07-26
+Date: 2024-08-08
 Title: Bayesian Change-Point Detection and Time Series Decomposition
 Authors@R: c(person(given = "Tongxi",   family = "Hu",       role = "aut",           email = "hu.1555@osu.edu"),
              person(given = "Yang",     family = "Li",       role = "aut",           email = "li.10015@osu.edu"),             
@@ -19,4 +19,4 @@ Imports: grid
 License: GPL (>= 2)
 URL: https://github.com/zhaokg/Rbeast
 NeedsCompilation: yes
-Packaged: 2024-08-02 05:46:41 UTC; zhaokg
+Packaged: 2024-08-09 02:19:29 UTC; zhaokg

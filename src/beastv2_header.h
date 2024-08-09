@@ -85,7 +85,7 @@ typedef struct BEAST2_MCMC {
 } BEAST2_MCMC,* _restrict BEAST2_MCMC_PTR;
 typedef struct BEAST2_EXTRA {
 	I08   smoothCpOccPrCurve;
-	I08   useMeanOrRndBeta;
+	I08   useRndBeta;
 	I08   dumpInputData;
 	U08   numThreadsPerCPU;
 	U16   numParThreads;
@@ -93,7 +93,6 @@ typedef struct BEAST2_EXTRA {
 	U16   consoleWidth;
 	I08   whichOutputDimIsTime;
 	I08   removeSingletonDims;
-	I08   ncpStatMethod;
 	Bool  computeCredible;
 	Bool  fastCIComputation;
 	Bool  computeSeasonOrder;
@@ -105,8 +104,7 @@ typedef struct BEAST2_EXTRA {
 	Bool tallyPosNegTrendJump;
 	Bool tallyIncDecTrendJump;
 	Bool tallyPosNegOutliers;
-	Bool  printOptions;
-	Bool  printProgressBar;
+	Bool  printProgress;
 	Bool dumpMCMCSamples;
 } BEAST2_EXTRA,* _restrict BEAST2_EXTRA_PTR;
 struct BEAST2_RESULT;

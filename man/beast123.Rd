@@ -88,6 +88,9 @@
     	   \item \code{metadata$period}:  numeric or string. Specify the period for the periodic/seasonal component in \code{Y}. Needed only for data with a periodic/cyclic component (i.e., season=\code{'harmonic'} or \code{'dummy'}) and not used for trend-only data (i.e., \code{season='none'}).  The period of the cyclic component should have a unit consisent with the unit of \code{deltaTime}. It holds that \code{period=deltaTime*freq} where \code{freq} is the number of data samples per period. (Note that the \code{freq} argument in earlier versions becomes obsolete and now is replaced by \code{period}.)  \code{period} or the number of data points per period is not a BEAST model parameter and it has to be specified by the user. But if \code{period} is missing, BEAST first attempts to guess its value via auto-correlation before fitting the model. If \code{period} <= 0, no seasonal/cyclic component is assumed (i.e, \code{season='none'}) and the trend-only model is used.  If needed, use a string to specify whether the unit of period is day, month, or year. Examples are '1.0 year', '12 months', '365d', '366 days'.
     	   \item \code{metadata$missingValue}: numeric; a customized value to indicate bad/missing values in the time series, in addition to those NA or NaN values.
     	   \item \code{metadata$maxMissingRate} a fractional number within [0, 1] as the maximum percentage of missing values, above which the time series will be skipped and won't be fitted by BEAST.
+           \item \code{hasOutlier}: boolean; if true, fit a model with an outlier component that refers to potential spikes or dips at isolated data points:   Y = trend + outlier + error if season='none',and Y = trend + season + outlier + error  if season ~= 'none'.
+
+  
            } %\itemize{
 
 
@@ -119,7 +122,9 @@
                     \item \code{precPriorType='componentwise'}: multiple precision parameters are used to parameterize the model coefficients for individual components (e.g., one for season and another for trend); their initial values is specified by \code{prior$precValue}. In other words, \code{precValue} will be inferred by the MCMC, so the fitting result is insensitive to the choice in \code{prior$precValue}.
                     \item \code{precPriorType='orderwise'}: multiple precision parameters are used to parameterize the model coefficients not just for individual components but also for individual orders of each component; their initial values is specified by \code{prior$precValue}. In other words, \code{precValue} will be inferred by the MCMC, so the fitting result is insensitive to the choice in \code{prior$precValue}.
              } % enumerate
-
+       		   
+      \item \code{outlierMaxKnotNum}: an integer; needed only if metadata$hasOutlier=True to specify the maximum number of outliers (i.e., Outlier-type ChangePoints such as spikes or dips--ocp) allowed in the time series.
+	  
     } %\itemize
 
    }
@@ -149,12 +154,9 @@
 	(optional). a list object consisting of flags to control the outputs from the BEAST runs or configure other program setting. Below are possible parameters:
 
         \itemize{
-		    \item \code{extra$quiet}: logical (default to FALSE). If TRUE, no warning messages will be printed out. 
     		\item \code{extra$dumpInputData}: logical (default to FALSE). If TRUE, the input time series will be copied into the output. When the input \code{Y} is irregular (i.e., \code{metadata$isRegularOrdered=FALSE}), the dumped copies will be the aggregated regular time series. 
     		\item \code{extra$whichOutputDimIsTime}: integer (<=3). If the input \code{Y} is a 2D or 3D array (i.e., multiple time series such as stacked images), the \code{whichOutputDimIsTime} specifies which dimension is the time in the output variables. \code{whichOutputDimIsTime} defaults to 3 for 3D inputs and is ignored if the input is a vector (i.e., a single time series).	
-			
 			\item \code{extra$ncpStatMethod}: character (deprecated). A string to specify which statistic is used to determine the Number of ChangePoint (ncp) when computing the most likely changepoint locations (e.g., out$trend$cp, and out$season$cp). Three values are possible: 'mode', 'mean', and 'median'; the default is 'mode'. Individual models sampled by BEAST has a varying dimension (e.g., number of changepoints or knots). For example, if mcmc$samples=10, the numbers of changepoints for the 10 sampled models are assumed to be c(0, 2, 4, 1, 1, 2, 7, 6, 6, 1). The mean ncp is 3.1 (rounded to 3), the median is 2.5 (2), and the mode is 1. This argument is deprecated; now all the possible changepoints are outputted, together with several versions of ncp, including \code{ncp}, \code{ncp_median}, \code{ncp_mode}, and \code{ncp_pct90}. A similar parameter \code{ncpStat} is added to the \code{\link[Rbeast]{plot.beast}} function to specify which ncp is used when plotting. 
-			
     		\item \code{extra$computeCredible}: logical (default to TRUE). Credible intervals will be computed and outputted only if set to TRUE.
     		\item \code{extra$fastCIComputation}:  logical (default to TRUE). If TRUE, a fast method is used to compute credible intervals (CI). Computation of CI is one of the most computational parts and fastCIComputation should be set to TRUE unless more accurate CI estimation is desired.  
     		\item \code{extra$computeSeasonOrder}: logical (default to TRUE). If TRUE, a posterior estimate of the seasonal harmonic order will be outputted; this flag is only valid if the time series has a seasonal component (i.e., season='harmonic' and prior$seasonMinOrder is not equal to prior$seasonMaxOrder).
@@ -166,17 +168,22 @@
   			\item \code{extra$computeTrendSlope}: logical (default to FALSE). If TRUE, compute and output the time-varying slope of the estimated trend.
   			\item \code{extra$tallyPosNegSeasonJump}: logical (default to FALSE). If TRUE, compute and differentiate seasonal changepoints in terms of the direction of the jumps in the estimated seasonal signal. Those changepoints with a positive jump will be outputted separately from those with a negative jump. A series of output variables (some for positive-jump changepoints, and others for negative-jump changepoints will be dumped).
   			\item \code{extra$tallyPosNegTrendJump}: logical (default to FALSE). If TRUE, compute and differentiate trend changepoints in terms of the direction of the jumps in the estimated trend. Those changepoints with a positive jump will be outputted separately from those with a negative jump. A series of output variables (some for positive-jump changepoints, and others for negative-jump changepoints will be dumped).
-  	                \item \code{extra$tallyIncDecTrendJump}: logical (default to FALSE). If TRUE, compute and differentiate trend changepoints in terms of the direction of the jumps in the estimated slope of the trend signal. Those changepoints with a increase in the slope will be outputted separately from those with a decrease in the slope. A series of output variables (some for increase-jump changepoints, and others for decrease-jump changepoints will be dumped).
-  			\item \code{extra$printProgressBar}: logical (default to FALSE). If TRUE, a progress bar will be displayed to show the status of the running. When running on multiple time series (e.g. stacked image time series), the progress bar will also report an estimate of the remaining time for completion.
+  	        \item \code{extra$tallyIncDecTrendJump}: logical (default to FALSE). If TRUE, compute and differentiate trend changepoints in terms of the direction of the jumps in the estimated slope of the trend signal. Those changepoints with a increase in the slope will be outputted separately from those with a decrease in the slope. A series of output variables (some for increase-jump changepoints, and others for decrease-jump changepoints will be dumped).
+  			
   			\item \code{extra$consoleWidth}: integer (default to 0); the length of chars in each status line when setting printProgressBar=TRUE. If 0, the current width of the console will be used.
-  			\item \code{extra$printOptions}: logical (default to FALSE). If TRUE, the values used in the arguments \code{metadata}, \code{prior}, \code{mcmc}, and \code{extra} will be printed to the console at the start of the run.
-     			\item \code{extra$numThreadsPerCPU}: integer (default to 2); the number of threads to be scheduled for each CPU core. 
-     			\item \code{extra$numParThreads}: integer (default to 0). When handling many time series, BEAST can use multiple concurrent threads. \code{extra$numParThreads} specifies how many concurrent threads will be used in total. If numParThreads=0, the actual number of threads will be \code{numThreadsPerCPU * cpuCoreNumber}; that is, each CPU core will generate a number 'numThreadsPerCPU' of threads. On Windows 64, ,BEAST is group-aware and will affine or distribute the threads to all the NUMA node. But currently, up to 256 CPU cores are supported.
-			}
+  			\item \code{extra$printParameter}: logical (default to TRUE). If TRUE, the values used in the arguments \code{metadata}, \code{prior}, \code{mcmc}, and \code{extra} will be printed to the console at the start of the run.
+  			\item \code{extra$printProgress}: logical (default to FALSE). If TRUE, a progress bar will be displayed to show the status of the running. When running on multiple time series (e.g. stacked image time series), the progress bar will also report an estimate of the remaining time for completion.	
+  			\item \code{extra$printWarning}:  logical;If \code{TRUE}, print warning messages.	
+  			\item \code{extra$quiet}: logical. If \code{TRUE}, print nothing.	
+  			\item \code{extra$dumpMCMCSamples}:  boolean; If \code{TRUE}, dump individual samples of the MCMC chains.	  
+  			
+     		\item \code{extra$numThreadsPerCPU}: integer (default to 2); the number of threads to be scheduled for each CPU core. 
+     		\item \code{extra$numParThreads}: integer (default to 0). When handling many time series, BEAST can use multiple concurrent threads. \code{extra$numParThreads} specifies how many concurrent threads will be used in total. If numParThreads=0, the actual number of threads will be \code{numThreadsPerCPU * cpuCoreNumber}; that is, each CPU core will generate a number 'numThreadsPerCPU' of threads. On Windows 64, ,BEAST is group-aware and will affine or distribute the threads to all the NUMA node. But currently, up to 256 CPU cores are supported.
+		}
   }  
 
 
-  \item{season}{ characters (default to 'harmonic'); specify if \code{y} has a periodic component or not. Three strings are possible.
+  \item{season}{ characters (default to 'harmonic'); specify if \code{y} has a periodic component or not. Four strings are possible.
 				\itemize{
 					\item  \code{'none'}: \code{y} is trend-only; no periodic components are present in the time series. The args for the seasonal component (i.e.,\code{sorder.minmax}, \code{scp.minmax} and \code{sseg.max}) will be irrelevant and ignored. 
 					\item  \code{'harmonic'}: \code{y} has a periodic/seasonal component. The term \code{season} is a misnomer, being used here to broadly refer to any periodic variations present in \code{y}. The periodicity is NOT a model parameter estimated by BEAST but a known constant given by the user through \code{freq}. By default, the periodic component is modeled as a harmonic curve--a combination of sins and cosines.
@@ -447,8 +454,8 @@
  extra$tallyPosNegTrendJump = FALSE #If true, get those changpts with +/- jumps in trend 
  extra$tallyIncDecTrendJump = FALSE #If true, get those changpts with increasing/
                                     # decreasing trend slopes 
- extra$printProgressBar     = TRUE
- extra$printOptions         = TRUE
+ extra$printProgress        = TRUE
+ extra$printParameter       = TRUE
  extra$quiet                = FALSE # print warning messages, if any
  extra$consoleWidth         = 0     # If 0, the console width is from the current console
  extra$numThreadsPerCPU     = 2     # 'numThreadsPerCPU' and 'numParThreads' are used to 

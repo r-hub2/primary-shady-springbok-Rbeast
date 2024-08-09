@@ -102,6 +102,7 @@
 	#include "Python.h"     
 	#include "structmember.h"
 #define  NPY_NO_DEPRECATED_API   NPY_1_7_API_VERSION  
+#ifdef  USE_STANDARD_METHOD_IMPORT_NUMPY
 	#ifdef  IMPORT_NUMPY
 	   #define PY_ARRAY_UNIQUE_SYMBOL NumpyAPIList
 	   #include "numpy/arrayobject.h"
@@ -110,6 +111,7 @@
 		#define PY_ARRAY_UNIQUE_SYMBOL NumpyAPIList
 		#include "numpy/arrayobject.h"
 	#endif
+#endif
 #endif
 #if R_INTERFACE==1||P_INTERFACE==1
 	#ifndef Bool

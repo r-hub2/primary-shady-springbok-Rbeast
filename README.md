@@ -75,7 +75,7 @@ from **GitHub**: The latest R versions are also available here at [GitHub](https
  
 <p  align="left">   
 <a href= "https://cran.r-project.org/package=Rbeast">
-<img src="https://www.r-pkg.org/badges/version/Rbeast?color=green"  height="20">  
+<img src="https://www.r-pkg.org/badges/version/Rbeast?color=green"          height="20">  
 <img src="https://cranlogs.r-pkg.org/badges/grand-total/Rbeast?color=green" height="20">  
 <img src="https://img.shields.io/static/v1?style=plastic&logo=r&label=Rbeast%20%20&message= In CRAN-Task-View&color=brightgreen" height="20">
 </a>
@@ -258,6 +258,7 @@ Despite being published originally for ecological and enviornmental applications
 |Cognitive Science|*Prein, J.C., Maurits, L., Werwach, A., Haun, D.B. and Bohn, M., 2024. Variation in gaze following across the life span: A process‐level perspective. Developmental Science, p.e13546.*|
 |Neuroscience|*Aqel, K., Wang, Z., Peng, Y.B. and Maia, P.D., 2024. Reconstructing rodent brain signals during euthanasia with eigensystem realization algorithm (ERA). Scientific Reports, 14(1), p.12261.*|
 |Glaciology|*Ramón, C.L., Rueda, F.J., Priet‐Mahéo, M.C. and Andradóttir, H., 2024. The impact of deep glacial water diversions from a hydroelectric reservoir in the thermal dynamics of a sub-arctic lake. Journal of Hydrology, 635, p.131081.*|
+|Quaternary Science|*Gibson, D.K., Bird, B.W., Finney, B.P. and Steinman, B.A., 2024. Holocene insolation and sea surface temperature influences on the polar front jet stream and precipitation in the midcontinental United States. Quaternary Science Reviews, 340, p.108865.*|
 |Geography|*Lyu, R., Pang, J., Zhang, J. and Zhang, J., 2024. The impacts of disturbances on mountain ecosystem services: Insights from BEAST and Bayesian network. Applied Geography, 162, p.103143.*|
 |Watershed Hydrology|*Sakizadeh, M., Milewski, A. and Sattari, M.T., 2023. Analysis of Long-Term Trend of Stream Flow and Interaction Effect of Land Use and Land Cover on Water Yield by SWAT Model and Statistical Learning in Part of Urmia Lake Basin, Northwest of Iran. Water, 15(4), p.690.*|
 |Oceanography|*Oehlert, A.M., Hunter, H., Riopelle, C. and Purkis, S.J., 2023. Perturbation to North Atlantic Ocean‐Climate Dynamics Tripled Whitings Mud Production in the Bahamas. Journal of Geophysical Research: Oceans, 128(11), p.e2023JC020021.*|

@@ -110,7 +110,7 @@ int beast2_main_corev4(void)   {
 	SetBreakPointForStartedTimer();
 	const PREC_FUNCS precFunc;
 	SetUpPrecFunctions(opt->prior.precPriorType,opt->io.q,&precFunc);
-	if (extra.printProgressBar) {
+	if (extra.printProgress) {
 		F32 frac=0.0; I32 firstTimeRun=1;
 		printProgress1(frac,extra.consoleWidth,Xnewterm,firstTimeRun);
 	}
@@ -328,7 +328,7 @@ int beast2_main_corev4(void)   {
 						F32 sig2=1.0f/sig2_inv;
 						MODEL.sig2[0]=sig2 > MIN_SIG2_VALUE ? sig2 : MODEL.sig2[0];
 					}	 
-					if (bResampleParameter||(bStoreCurrentSample && extra.useMeanOrRndBeta)) {
+					if (bResampleParameter||(bStoreCurrentSample && extra.useRndBeta)) {
 							I32 K=MODEL.curr.K;
 							r_vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF,stream,K,MODEL.beta,0,1);
 							solve_U_as_U_invdiag(MODEL.curr.cholXtX,MODEL.beta,K,K);
@@ -359,7 +359,7 @@ int beast2_main_corev4(void)   {
 					if (bResampleParameter||bStoreCurrentSample) {						
 						local_pcg_invwishart_upper(&stream,MODEL.sig2,MODEL.sig2+q * q,MEMBUF,q,MODEL.curr.alpha2Q_star,hyperPar.alpha_1+yInfo.n+q - 1);
 					}
-					if (bResampleParameter||(bStoreCurrentSample && extra.useMeanOrRndBeta)) {
+					if (bResampleParameter||(bStoreCurrentSample && extra.useRndBeta)) {
 						r_vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF,stream,K * q,MEMBUF,0.,1.);
 						r_cblas_sgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,K,q,q,1.0,MEMBUF,K,MODEL.sig2,q,0.f,MODEL.beta,K);
 						solve_U_as_U_invdiag_multicols(MODEL.curr.cholXtX,MODEL.beta,K,K,q);
@@ -403,7 +403,7 @@ int beast2_main_corev4(void)   {
 					r_cblas_sgemm(CblasColMajor,CblasTrans,CblasNoTrans,q,q,q,1.f,MODEL.sig2,q,MODEL.sig2,q,0.f,MEMBUF,q);
 					r_ippsAdd_32f_I(MEMBUF,resultChain.sig2,q*q);
 				}
-				const F32PTR BETA=(extra.useMeanOrRndBeta==0) ? MODEL.curr.beta_mean : MODEL.beta;
+				const F32PTR BETA=(extra.useRndBeta==0) ? MODEL.curr.beta_mean : MODEL.beta;
 				{
 					 F32PTR MEMBUF1=Xnewterm;
 					for (I32 i=0; i < MODEL.NUMBASIS;++i) 
@@ -563,7 +563,7 @@ int beast2_main_corev4(void)   {
 						result.omcmc+=N * q;
 					}
 				}
-				if (extra.printProgressBar && NUM_PIXELS==1 && sample%1000==0) {
+				if (extra.printProgress && NUM_PIXELS==1 && sample%1000==0) {
 					F32 frac=(F32)(chainNumber * MCMC_SAMPLES+sample)/(MCMC_SAMPLES * MCMC_CHAINNUM);
 					printProgress1(frac,extra.consoleWidth,Xnewterm,0);
 				}
