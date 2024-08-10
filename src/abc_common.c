@@ -162,7 +162,7 @@ F32 DeterminePeriod(F32PTR Y,I32 N)
 	}
 	U08PTR isPeak=isNA;
 	I32PTR INDEX=(I32PTR)(TMP+M); 
-	memset(isNA,0,(size_t) M);
+	memset(isNA,0,(size_t)(uint32_t)M);
 	I32  numPeaks=0;
 	for ( I32 i=2; i <=(M - 1); i++)	{
 		if (ans[(i)-1] > ans[(i - 1) - 1] && ans[(i)-1] > ans[(i+1) - 1]) {
