@@ -255,7 +255,6 @@ int beast2_main_corev4(void)   {
 						precFunc.SetPrecXtXDiag(MODEL.curr.precXtXDiag,MODEL.b,MODEL.NUMBASIS,&MODEL.precState);
 						precFunc.chol_addCol(MODEL.curr.XtX,MODEL.curr.cholXtX,MODEL.curr.precXtXDiag,MODEL.curr.K,1L,MODEL.curr.K);
 						precFunc.ComputeMargLik(&MODEL.curr,&MODEL.precState,&yInfo,&hyperPar);
-						r_printf("ite%5d prec: %.4f|marg_lik_prop: %.4f|marg_like_curr: %.4f \n",MODEL.precState.precVec[0],MODEL.prop.marg_lik,MODEL.curr.marg_lik);
 					#if !( defined(R_RELEASE)||defined(M_RELEASE)||defined(P_RELEASE) )
 						r_printf("prec: %.4f|marg_lik_prop: %.4f|marg_like_curr: %.4f \n",MODEL.precState.precVec[0],MODEL.prop.marg_lik,MODEL.curr.marg_lik);
 					#endif
