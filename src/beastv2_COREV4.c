@@ -177,18 +177,17 @@ int beast2_main_corev4(void)   {
 			const I32  Npad=N;  (N+7)/8 * 8; 
 			const I32  Npad16=(N+15)/16 * 16;	
 			{   
-				GenarateRandomBasis(MODEL.b,MODEL.NUMBASIS,N,&RND);
-				if (q==1) {
-					BEAST2_EvaluateModel(&MODEL.curr,MODEL.b,Xt_mars,N,MODEL.NUMBASIS,&yInfo,&hyperPar,&MODEL.precState,&precFunc); 
-				} else 	{
-					MR_EvaluateModel(    &MODEL.curr,MODEL.b,Xt_mars,N,MODEL.NUMBASIS,&yInfo,&hyperPar,&MODEL.precState,&precFunc);
-				}
+				GenarateRandomBasis(MODEL.b,MODEL.NUMBASIS,N,&RND,&yInfo);
+				BEAST2_EvaluateModel(&MODEL.curr,MODEL.b,Xt_mars,N,MODEL.NUMBASIS,&yInfo,&hyperPar,&MODEL.precState,&precFunc); 
 			}
 			{
 				CvtKnotsToBinVec(MODEL.b,MODEL.NUMBASIS,N,&yInfo);
 				memset(MODEL.extremePosVec,1,N);
 				for (I32 i=0; i < yInfo.nMissing;++i) MODEL.extremePosVec[yInfo.rowsMissing[i]]=0;
 				MODEL.extremPosNum=yInfo.n;
+				f32_fill_val(1e30,MODEL.deviation,N);
+				for (I32 i=0; i < yInfo.nMissing;++i) MODEL.deviation[yInfo.rowsMissing[i]]=getNaN();
+				MODEL.avgDeviation[0]=1.0;
 				BEAST2_Result_FillMEM(&resultChain,opt,0);
 				MODEL.b[0].Kbase=0;                           
 				UpdateBasisKbase(MODEL.b,MODEL.NUMBASIS,0);	
@@ -200,9 +199,10 @@ int beast2_main_corev4(void)   {
 					ci[i].samplesInserted=0;
 				} 
 			} 
-			PROP_DATA PROPINFO={.N=N,.Npad16=Npad16,.samples=&sample,.keyresult=coreResults,.mem=Xnewterm,.model=&MODEL, 
-				              .pRND=&RND,.yInfo=&yInfo,.nSample_ExtremVecNeedUpdate=1L,.sigFactor=opt->prior.sigFactor, 
-							  .outlierSigFactor=opt->prior.outlierSigFactor,};
+			PROP_DATA PROPINFO={ .N=N,.Npad16=Npad16,.samples=&sample,.keyresult=coreResults,.mem=Xnewterm,.model=&MODEL,
+							  .pRND=&RND,.yInfo=&yInfo,.sigFactor=opt->prior.sigFactor,.outlierSigFactor=opt->prior.outlierSigFactor,
+							  .nSample_DeviationNeedUpdate=1L,.shallUpdateExtremVec=0L, 
+				               .numBasisWithoutOutlier=MODEL.NUMBASIS - (opt->prior.basisType[MODEL.NUMBASIS - 1]==OUTLIERID),};
 			NEWTERM   NEW={ .newcols={.N=N,.Nlda=Npad} };
 			I32 numBadIterations=0;
 			while (sample < MCMC_SAMPLES)
@@ -255,6 +255,7 @@ int beast2_main_corev4(void)   {
 						precFunc.SetPrecXtXDiag(MODEL.curr.precXtXDiag,MODEL.b,MODEL.NUMBASIS,&MODEL.precState);
 						precFunc.chol_addCol(MODEL.curr.XtX,MODEL.curr.cholXtX,MODEL.curr.precXtXDiag,MODEL.curr.K,1L,MODEL.curr.K);
 						precFunc.ComputeMargLik(&MODEL.curr,&MODEL.precState,&yInfo,&hyperPar);
+						r_printf("ite%5d prec: %.4f|marg_lik_prop: %.4f|marg_like_curr: %.4f \n",MODEL.precState.precVec[0],MODEL.prop.marg_lik,MODEL.curr.marg_lik);
 					#if !( defined(R_RELEASE)||defined(M_RELEASE)||defined(P_RELEASE) )
 						r_printf("prec: %.4f|marg_lik_prop: %.4f|marg_like_curr: %.4f \n",MODEL.precState.precVec[0],MODEL.prop.marg_lik,MODEL.curr.marg_lik);
 					#endif
@@ -316,7 +317,7 @@ int beast2_main_corev4(void)   {
 					if (q==1) {
 					}
 					else {
-						MR_EvaluateModel(&MODEL.prop,MODEL.b,Xdebug,N,MODEL.NUMBASIS,&yInfo,&hyperPar,MODEL.precState.precVec,&stream);
+						BEAST2_EvaluateModel(&MODEL.prop,MODEL.b,Xdebug,N,MODEL.NUMBASIS,&yInfo,&hyperPar,MODEL.precState.precVec,&stream);
 					}
 					#endif
 				} 

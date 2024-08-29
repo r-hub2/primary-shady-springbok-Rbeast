@@ -340,6 +340,7 @@ void AllocInitModelMEM(BEAST2_MODEL_PTR model,BEAST2_OPTIONS_PTR opt,MemPointers
 		}
 		else if (type==OUTLIERID) {
 			MODEL.oid=i;
+			basis->prior.minKnotNum=opt->prior.outlierMinKnotNum;
 			basis->prior.maxKnotNum=opt->prior.outlierMaxKnotNum;
 			isComponentFixed[i]=0;
 			AllocInitBasisMEM(basis,N,K_MAX,MEM);

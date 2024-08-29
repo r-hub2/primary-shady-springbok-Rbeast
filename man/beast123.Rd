@@ -123,7 +123,8 @@
                     \item \code{precPriorType='orderwise'}: multiple precision parameters are used to parameterize the model coefficients not just for individual components but also for individual orders of each component; their initial values is specified by \code{prior$precValue}. In other words, \code{precValue} will be inferred by the MCMC, so the fitting result is insensitive to the choice in \code{prior$precValue}.
              } % enumerate
        		   
-      \item \code{outlierMaxKnotNum}: an integer; needed only if metadata$hasOutlier=True to specify the maximum number of outliers (i.e., Outlier-type ChangePoints such as spikes or dips--ocp) allowed in the time series.
+      \item \code{outlierMinKnotNum}:  integer (>=0)			   
+      \item \code{outlierMaxKnotNum}:  integer (>=0); needed only if metadata$hasOutlier=True to specify the mininum and maximum numbers of outliers (i.e., Outlier-type ChangePoints such as spikes or dips--ocp) allowed in the time series.
 	  
     } %\itemize
 
@@ -371,6 +372,8 @@
 # in the next example.
 \donttest{ 
  o = beast123(Nile,season='none')
+ o = beast123(Nile, extra=list(dumpInputData=TRUE, quiet=TRUE),season='none')
+ o = beast123(Nile, metadata=list(star=1871, hasOutlier=TRUE), season='none')
  plot(o)
 }
 

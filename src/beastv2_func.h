@@ -8,8 +8,9 @@
 extern F32  GetPercentileNcp(F32PTR prob,I32 N,F32 pctile);
 extern void SetupPointersForCoreResults(CORESULT* coreResults,BEAST2_BASIS_PTR b,I32 NumBasis,BEAST2_RESULT* resultChain);
 extern void CvtKnotsToBinVec(BEAST2_BASIS_PTR b,I32 NUMBASIS,I32 N,BEAST2_YINFO_PTR yInfo);
-extern void GenarateRandomBasis(BEAST2_BASIS_PTR basis,I32 NUMBASIS,I32 N,BEAST2_RNDSTREAM* PRAND);
+extern void GenarateRandomBasis(BEAST2_BASIS_PTR basis,I32 NUMBASIS,I32 N,BEAST2_RNDSTREAM* PRAND,BEAST2_YINFO_PTR yInfo);
 typedef struct PREC_FUNCS  PREC_FUNCS;
+int BEAST2_Basis_To_XmarsXtX_XtY(BEAST2_BASIS_PTR b,I32 NUMBASIS,F32PTR Xt_mars,I32 N,F32PTR XtX,F32PTR XtY,BEAST2_YINFO_PTR  yInfo);
 void BEAST2_EvaluateModel(
     BEAST2_MODELDATA* curmodel,BEAST2_BASIS_PTR b,F32PTR Xt_mars,I32 N,I32 NUMBASIS,
     BEAST2_YINFO_PTR  pyInfo,BEAST2_HyperPar*hyperPar,PRECSTATE_PTR precState,PREC_FUNCS * precFunc);
@@ -86,6 +87,3 @@ static void XtX_ByGroup_FULL(BEAST2_BASESEG* SEG,I32 numSeg,F32PTR X,F32PTR XtX,
 					X,Npad,0.,
 					XtX,Knew);
 }
-void MR_EvaluateModel(
-	BEAST2_MODELDATA* curmodel,BEAST2_BASIS_PTR b,F32PTR Xt_mars,I32 N,I32 NUMBASIS,
-	BEAST2_YINFO_PTR pyInfo,BEAST2_HyperPar*hyperPar,PRECSTATE_PTR precState,PREC_FUNCS* precFunc);

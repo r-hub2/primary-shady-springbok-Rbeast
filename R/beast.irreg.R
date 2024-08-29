@@ -17,7 +17,7 @@ beast.irreg <- function(
 					precValue      = 1.5,
 					precPriorType  = c('componentwise','uniform','constant','orderwise'),
 					hasOutlier	   = FALSE,
-					ocp.max        = 10,					
+					ocp.minmax     = c(0,10),					
 					print.param    = TRUE,
 					print.progress = TRUE,
 					print.warning  = TRUE,
@@ -111,7 +111,10 @@ beast.irreg <- function(
    if (!is.null(tseg.min)         && !is.na(tseg.min))         prior$trendMinSepDist  = tseg.min
    if (!is.null(tseg.leftmargin)  && !is.na(tseg.leftmargin))  prior$trendLeftMargin  = tseg.leftmargin
    if (!is.null(tseg.rightmargin) && !is.na(tseg.rightmargin)) prior$trendRightMargin = tseg.rightmargin
-   prior$outlierMaxKnotNum	=  ocp.max 
+   if (hasOutlier) {
+	prior$outlierMinKnotNum	=  ocp.minmax[1]
+	prior$outlierMaxKnotNum	=  ocp.minmax[2]
+   }   
    prior$K_MAX              = 0
    prior$precValue          = precValue
    prior$precPriorType      = precPriorType

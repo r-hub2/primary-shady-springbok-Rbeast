@@ -8,7 +8,7 @@
 \alias{RBEAST}
 \title{Bayesian changepoint detection detection and time series decomposition for trend, periodicity or seasonality, and abrupt changes}
 \description{
-   A Bayesian model averaging algorithm called BEAST to decompose time series or 1D sequential data into individual components, such as abrupt changes, trends, and periodic/seasonal variations. BEAST is useful for changepoint detection (e.g., breakpoints or structural breaks), nonlinear trend analysis, time series decomposition, and time series segmentation.
+   A Bayesian model averaging algorithm called BEAST to decompose time series or 1D sequential data into individual components, such as abrupt changes, trends, and periodic/seasonal variations. BEAST is useful for changepoint detection (e.g., breakpoints, joinpoints, or structural breaks), nonlinear trend analysis, time series decomposition, and time series segmentation.
    \cr \cr
    \if{html}{\figure{Nile.jpg}{options: width="95\%" alt="Figure: Nile.jpg"}}
    \if{latex}{\figure{Nile.pdf}{options: width=10cm}}
@@ -36,7 +36,7 @@
          precValue      = 1.5,
          precPriorType  = c('componentwise','uniform','constant','orderwise'),
          hasOutlier	    = FALSE,
-         ocp.max        = 10,			 
+         ocp.minmax     = c(0,10),			 
          print.param    = TRUE,
          print.progress = TRUE,
          print.warning  = TRUE,
@@ -78,11 +78,11 @@
   
   }
   
-  \item{period}{ numeric or string. Specify the period for the seasonal/periodic component in \code{y}. Needed only for data with a periodic/cyclic component (e.g., season=\code{'harmonic'} or \code{'dummy'}) and not used for trend-only data (i.e., \code{season='none'}).  The period of the cyclic component should have a unit consisent with the unit of \code{deltat}. It holds that \code{period=deltat*freq} where \code{freq} is the number of data samples per period. (Note that the \code{freq} argument in earlier versions becomes obsolete and now is replaced by \code{period}. \code{freq} is still supported but\code{period} takes precedence if both are provided.)  \code{period} or the number of data points per period is not a BEAST model parameter and it has to be specified by the user. But if \code{period} is missing, BEAST first attempts to guess its value via auto-correlation before fitting the model. If \code{period} <= 0, \code{season='none'} is assumed, and  the trend-only model is fitted without a seasonal/cyclic component. If needed, use a string to specify whether the unit of period is day, month, or year. Examples are '1.0 year', '12 months', '365d', '366 days'.}
+  \item{period}{ numeric or string. Specify the period for the seasonal/periodic component in \code{y}. Needed only for data with a periodic/cyclic component (e.g., season=\code{'harmonic'}, \code{'svd'} or \code{'dummy'}) and not used for trend-only data (i.e., \code{season='none'}).  The period of the cyclic component should have a unit consisent with the unit of \code{deltat}. It holds that \code{period=deltat*freq} where \code{freq} is the number of data samples per period. (Note that the \code{freq} argument in earlier versions becomes obsolete and now is replaced by \code{period}. \code{freq} is still supported but\code{period} takes precedence if both are provided.)  \code{period} or the number of data points per period is not a BEAST model parameter and it has to be specified by the user. But if \code{period} is missing, BEAST first attempts to guess its value via auto-correlation before fitting the model. If \code{period} <= 0, \code{season='none'} is assumed, and  the trend-only model is fitted without a seasonal/cyclic component. If needed, use a string to specify whether the unit of period is day, month, or year. Examples are '1.0 year', '12 months', '365d', '366 days'.}
 
-  \item{scp.minmax}{ a vector of 2 integers (>=0); the min and max number of seasonal changepoints (scp) allowed in segmenting the seasonal component. \code{scp.minmax} is used only if \code{y} has a seasonal component (i.e., \code{season='harmonic' or 'dummy' }) and ignored for trend-only data. If the min and max changepoint numbers are equal, BEAST assumes a constant number of scp and won't infer the posterior probability of the number of changepoints, but it still estimates the occurrence probability of the changepoints over time (i.e., the most likely times at which these changepoints occur). If both the min and max numbers are set to 0, no changepoints are allowed; then a global harmonic model is used to fit the seasonal component, but still, the most likely harmonic order will be inferred if sorder.minmax[1] is not equal to sorder.minmax[2].}
+  \item{scp.minmax}{ a vector of 2 integers (>=0); the min and max number of seasonal changepoints (scp) allowed in segmenting the seasonal component. \code{scp.minmax} is used only if \code{y} has a seasonal component (i.e., season=\code{'harmonic'}, \code{'svd'} or \code{'dummy'}) and ignored for trend-only data. If the min and max changepoint numbers are equal, BEAST assumes a constant number of scp and won't infer the posterior probability of the number of changepoints, but it still estimates the occurrence probability of the changepoints over time (i.e., the most likely times at which these changepoints occur). If both the min and max numbers are set to 0, no changepoints are allowed; then a global harmonic model is used to fit the seasonal component, but still, the most likely harmonic order will be inferred if sorder.minmax[1] is not equal to sorder.minmax[2].}
   
-  \item{sorder.minmax}{ a vector of 2 integers (>=1); the min and max harmonic orders considered to fit the seasonal component. \code{sorder.minmax} is used only used if the time series has a seasonal component (i.e., \code{season='harmonic'}) and ignored for trend-only data or when \code{season='dummy'}. If the min and max orders are equal (\code{sorder.minmax[1]=sorder.minmax[2]}), BEAST assumes a constant harmonic order used and won't infer the posterior probability of harmonic orders. }
+  \item{sorder.minmax}{ a vector of 2 integers (>=1); the min and max harmonic orders considered to fit the seasonal component. \code{sorder.minmax} is used only used if the time series has a seasonal component (i.e., season=\code{'harmonic'} or \code{'svd'}) and ignored for trend-only data or when \code{season='dummy'}. If the min and max orders are equal (\code{sorder.minmax[1]=sorder.minmax[2]}), BEAST assumes a constant harmonic order used and won't infer the posterior probability of harmonic orders. }
   
   %%%%%%%%%%%%%%%%%%%%%	
    
@@ -148,12 +148,12 @@
           } %componentwise
   }
   
-      
+ 
  
 
   \item{hasOutlier}{boolean; if true, fit a model with an outlier component that refers to potential spikes or dips at isolated data points:   Y = trend + outlier + error if season='none',and Y = trend + season + outlier + error  if season ~= 'none'.}  
 
-  \item{ocp.max}{an integer; needed only if hasOutlier=True to specify the maximum number of outliers (i.e., Outlier-type ChangePoints such as spikes or dips--ocp) allowed in the time series.} 
+  \item{ocp.minmax}{a vector of 2 integers (>=0); the min and max numbers of outlier-type changepoints (ocp) allowed in the time seriestrend component. Ocp refers to spikes or dips at isolated times that can't be modeled as trends or seasonal terms.} 
   
   \item{print.param}{ boolean. If \code{TRUE},the full list of input parameters to BEAST  will be printed out prior to the MCMC inference; the naming for this list (e.g., metadata, prior, and mcmc) differs slightly from the input to \code{beast}, but there is a one-to-one correspondence (e.g., prior$trendMinSepDist=tseg.min). Internally, beast converts the input parameters to the forms of metadata, prior,and mcmc. Type 'View(beast)' to see the details or check the \code{beast123} function. }	
   
@@ -660,7 +660,19 @@ library(Rbeast)
                     #will allow reproducing the same result for different BEAST runs.
  
   beast(Yellowstone, opt)  
-}
+ }
+ 
+#------------------------------------Example 14---------------------------------------#
+# Fit a model with an outlier component: Y = trend + outlier + error. 
+# Outliers here refer to spikes or dips at isolated points that can't be capatured by the 
+# trend
+\dontrun{ 
+ NileVec        = as.vector(Nile)
+ NileVec[50]    = NileVec[50] + 1500                   # Add an artificial spike at t=50
+ o = beast(NileVec, season='none', hasOutlier=TRUE)
+ plot(o)
+ }
+
 }
 \references{
 \enumerate{

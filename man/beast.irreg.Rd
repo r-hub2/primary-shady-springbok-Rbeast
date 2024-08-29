@@ -32,8 +32,8 @@
        mcmc.samples   = 8000,
        precValue      = 1.5,
        precPriorType  = c('componentwise', 'uniform', 'constant', 'orderwise'),
-       hasOutlier	    = FALSE,
-       ocp.max        = 10,		   
+       hasOutlier	  = FALSE,
+       ocp.minmax     = c(0,10),			 	   
        print.param    = TRUE,
        print.progress = TRUE,
        print.warning  = TRUE,
@@ -175,8 +175,8 @@
   \item{hasOutlier}{boolean; if true, fit a model with an outlier component that refers to potential spikes or dips at isolated data points:   Y = trend + outlier + error if season='none',and Y = trend + season + outlier + error  if season ~= 'none'.
   }  
 
-  \item{ocp.max}{an integer; needed only if hasOutlier=True to specify the maximum number of outliers (i.e., Outlier-type ChangePoints such as spikes or dips--ocp) allowed in the time series.
-  } 
+
+  \item{ocp.minmax}{a vector of 2 integers (>=0); the min and max numbers of outlier-type changepoints (ocp) allowed in the time seriestrend component. Ocp refers to spikes or dips at isolated times that can't be modeled as trends or seasonal terms.} 
 
   \item{print.param}{ boolean. If \code{TRUE},the full list of input parameters to BEAST  will be printed out prior to the MCMC inference; the naming for this list (e.g., metadata, prior, and mcmc) differs slightly from the input to \code{beast}, but there is a one-to-one correspondence (e.g., prior$trendMinSepDist=tseg.min). Internally, beast converts the input parameters to the forms of metadata, prior,and mcmc. Type 'View(beast)' to see the details or check the \code{beast123} function. }	
   

@@ -246,14 +246,14 @@ void * mainFunction(void *prhs[],int nrhs) {
 		   ||__IS_STRING_EQUAL(algorithm,beast_bic2)||__IS_STRING_EQUAL(algorithm,beast_bic1.5)
 		   ||__IS_STRING_EQUAL(algorithm,beast_bic0.5)||__IS_STRING_EQUAL(algorithm,beast_bic0.25) )  	{
 		int whichCritia=0;
-		if      (__IS_STRING_EQUAL(algorithm,beast_bic))   whichCritia=1;
-		else if (__IS_STRING_EQUAL(algorithm,beast_aic)) 	whichCritia=2;
-		else if (__IS_STRING_EQUAL(algorithm,beast_aicc)) 	whichCritia=3;
-		else if (__IS_STRING_EQUAL(algorithm,beast_hic)) 	whichCritia=4;
+		if      (__IS_STRING_EQUAL(algorithm,beast_bic))       whichCritia=1;
+		else if (__IS_STRING_EQUAL(algorithm,beast_aic)) 	    whichCritia=2;
+		else if (__IS_STRING_EQUAL(algorithm,beast_aicc)) 	    whichCritia=3;
+		else if (__IS_STRING_EQUAL(algorithm,beast_hic)) 	    whichCritia=4;
 		else if (__IS_STRING_EQUAL(algorithm,beast_bic0.25)) 	whichCritia=25;
 		else if (__IS_STRING_EQUAL(algorithm,beast_bic0.5)) 	whichCritia=50;
 		else if (__IS_STRING_EQUAL(algorithm,beast_bic1.5)) 	whichCritia=150;
-		else if (__IS_STRING_EQUAL(algorithm,beast_bic2)) 	 whichCritia=200;
+		else if (__IS_STRING_EQUAL(algorithm,beast_bic2)) 	    whichCritia=200;
 		BEAST2_OPTIONS      option={ {{0,},},}; 
 		#if P_INTERFACE==1
 			prhs[1]=CvtToPyArray_NewRef(prhs[1]);
@@ -279,6 +279,10 @@ void * mainFunction(void *prhs[],int nrhs) {
 			option.extra.computeSeasonChngpt=1;
 			BEAST2_print_options(&option); 
 			ANS=PROTECT(BEAST2_Output_AllocMEM(&option)); nptr++;
+		}
+		if (option.prior.precPriorType !=ConstPrec) {
+			option.prior.precPriorType=UniformPrec;
+			option.prior.precValue=0;
 		}
 		extern int beast2_main_corev4_bic(int whichCritia);
 		extern int beast2_main_core_bic_mthrd(void* dummy);

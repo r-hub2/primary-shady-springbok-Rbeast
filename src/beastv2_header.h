@@ -65,7 +65,7 @@ typedef struct BEAST2_PRIOR {
 	I32   seasonLeftMargin,seasonRightMargin;
 	I16   trendMinKnotNum,seasonMinKnotNum;
 	I16   trendMaxKnotNum,seasonMaxKnotNum;
-	I16   outlierMaxKnotNum;
+	I16   outlierMinKnotNum,outlierMaxKnotNum;
 	U16   K_MAX;
 	F32   sigFactor;
 	F32   outlierSigFactor;
@@ -218,10 +218,12 @@ typedef struct PROPOSE_STRUCT {
 	BEAST2_MODEL_PTR   model;
 	BEAST2_RANDSEEDPTR pRND;
 	BEAST2_YINFO_PTR   yInfo;
-	I32                nSample_ExtremVecNeedUpdate;
 	I32                N,Npad16;
 	F32                sigFactor;	
 	F32                outlierSigFactor;
+	I32                nSample_DeviationNeedUpdate;
+	I08                numBasisWithoutOutlier;
+	I08                shallUpdateExtremVec;
 } PROP_DATA,*_restrict PROP_DATA_PTR;
 typedef struct BEAST2_BASESEG {
 	I32 R1,R2,K;
