@@ -178,7 +178,9 @@ beast <- function(  y,
    prior$K_MAX              = 0
    prior$precValue          = precValue
    prior$precPriorType      = precPriorType
-   
+   if ( hasArg('modelprior') )       prior$modelPriorType	 = list(...)[['modelprior']]   
+   if ( hasArg('seasonmodelpriorfct') ) prior$seasonModelpriorFactor	 = list(...)[['seasonmodelpriorfct']]  
+   if ( hasArg('trendmodelpriorfct') )  prior$trendModelpriorFactor	     = list(...)[['trendmodelpriorfct']]    
 #......End of displaying pripr ......
 
 #......Start of displaying 'mcmc' ......
@@ -236,8 +238,9 @@ beast <- function(  y,
  
  if (hasArg("local")){ 
 	  # run the local developer's version of Rbeast
-	  # dyn.load('y:/testold/Rbeast.mexw64')
-	  #	ANS  = .Call( "rexFunction1",      list(funstr,y,metadata,prior,mcmc,extra),   212345, PACKAGE="Rbeast.mexw64")  
+	   dyn.load('y:/testold/Rbeast.mexw64')
+	   ANS  = .Call( "rexFunction1",      list(funstr,y,metadata,prior,mcmc,extra),   212345, PACKAGE="Rbeast.mexw64")  
+	   dyn.unload('y:/testold/Rbeast.mexw64')
  } else{
 	  ANS  = .Call( BEASTV4_rexFunction, list(funstr,y,metadata,prior,mcmc,extra),   212345)   		   
  } 
