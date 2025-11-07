@@ -1,7 +1,8 @@
 .onAttach <- function(libname, pkgname) {
   # Runs when attached to search() path such as by library() or require()
   
-  if ( interactive() && requireNamespace("utils") )  {
+  if ( interactive() && requireNamespace("utils", quitely=TRUE) )  {
+  # R check reports "Failed with error:  ‘unused argument (quitely = TRUE)’"
   # quitely seems not be to an arugment of requireNamespace.
     ver = utils::packageVersion("Rbeast")
     packageStartupMessage("Rbeast v", 

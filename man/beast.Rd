@@ -10,7 +10,20 @@
 \description{
    A Bayesian model averaging algorithm called BEAST to decompose time series or 1D sequential data into individual components, such as abrupt changes, trends, and periodic/seasonal variations. BEAST is useful for changepoint detection (e.g., breakpoints, joinpoints, or structural breaks), nonlinear trend analysis, time series decomposition, and time series segmentation.
    \cr \cr
-   \if{html}{\figure{Nile.jpg}{options: width="95\%" alt="Figure: Nile.jpg"}}
+   
+   % checkRd reports the error for the following: "height/width attributes should be in pixels"
+   %  \if{html}{\figure{Nile.jpg}{options: width="95\%" alt="Figure: Nile.jpg"}}
+   
+   % package biplotEZ:  the folllowing passes the check.
+   % \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+   
+   % package inca::inca.Rd:  the folllowing passes the check.
+   % \if{html}{\figure{logo.png}{options: style='float:right;width:156px;'}}
+   
+   % package frailtyMMpen::frailtyMM.Rd:  the folllowing passes the check.
+   %\if{html}{\figure{fig1.png}{options: style="width:750px;max-width:75\%;"}}
+   
+   \if{html}{\figure{Nile.jpg}{options: style="width:80\%;max-width:95\%" alt="Figure: Nile.jpg"}}
    \if{latex}{\figure{Nile.pdf}{options: width=10cm}}
   }
 \usage{
