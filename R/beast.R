@@ -238,9 +238,9 @@ beast <- function(  y,
  
  if (hasArg("local")){ 
 	  # run the local developer's version of Rbeast
-	   dyn.load('y:/testold/Rbeast.mexw64')
-	   ANS  = .Call( "rexFunction1",      list(funstr,y,metadata,prior,mcmc,extra),   212345, PACKAGE="Rbeast.mexw64")  
-	   dyn.unload('y:/testold/Rbeast.mexw64')
+	  # dyn.load('y:/testold/Rbeast.mexw64')
+	  # ANS  = .Call( "rexFunction1",      list(funstr,y,metadata,prior,mcmc,extra),   212345, PACKAGE="Rbeast.mexw64")  
+	  # dyn.unload('y:/testold/Rbeast.mexw64')
  } else{
 	  ANS  = .Call( BEASTV4_rexFunction, list(funstr,y,metadata,prior,mcmc,extra),   212345)   		   
  } 
