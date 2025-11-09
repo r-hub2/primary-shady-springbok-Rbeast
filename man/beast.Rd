@@ -23,7 +23,7 @@
    % package frailtyMMpen::frailtyMM.Rd:  the folllowing passes the check.
    %\if{html}{\figure{fig1.png}{options: style="width:750px;max-width:75\%;"}}
    
-   \if{html}{\figure{Nile.jpg}{options: style="width:80\%;max-width:95\%" alt="Figure: Nile.jpg"}}
+   \if{html}{\figure{Nile.jpg}{options:  width="95\%"  style="width:80\%;max-width:95\%" alt="Figure: Nile.jpg"}}
    \if{latex}{\figure{Nile.pdf}{options: width=10cm}}
   }
 \usage{
