@@ -21,6 +21,8 @@
        tcp.minmax     = c(0,10),   torder.minmax   = c(0,1), 	   
        sseg.min       = NULL,      sseg.leftmargin = NULL,  sseg.rightmargin = NULL,
        tseg.min       = NULL,      tseg.leftmargin = NULL,  tseg.rightmargin = NULL, 
+       s.complexfct   = 0.0,
+       t.complexfct   = 0.0,		   
        method         = c('bayes', 'bic', 'aic', 'aicc', 'hic',
 	                      'bic0.25', 'bic0.5', 'bic1.5', 'bic2' ),
        detrend        = FALSE, 
@@ -129,6 +131,12 @@
   
   \item{tseg.rightmargin}{ an integer (>=0); the number of rightmost data points excluded for trend changepoint detection. That is, when fitting a piecewise polynomial trend model, no changepoints are allowed in the ending window/segment of length \code{tseg.rightmargin}. \code{tseg.rightmargin} must be an unitless integer--the number of time intervals/data points so that the time window in the original unit is \code{tseg.rightmargin*deltat}. If missing, \code{tseg.rightmargin} defaults to \code{tseg.min}.}  
 
+%%%%%%%%%%%%%%%%%%%%%	
+  
+  \item{s.complexfct}{ a real number (default to 0.0); a prior hyperparameter controlling the complexity of the seasonal curve or the number of seasonal changepoints. A prior of form \eqn{exp[-\lambda*(k+1)]} is elicited on the number of seasonal changepoints (i.e., model dimensions) where \eqn{k}) is the number of changepoints and \eqn{\lambda} is \code{s.complexfct}. \eqn{\lambda=0}) (the default value) gives an non-informative prior so that all the model dimensions are equally probabe a prior.If needed, users are recommended to manually tune it with the range of [-20.0, 20.0]. Values smaller than zero (e.g., \eqn{\lambda=-15.9}) gives fewer  changepoints or simpler seasonal curves(i.e., parsimonious seasonal model) whereas postive values (e.g., \eqn{\lambda=19.6}) give more changepoints or more complex curves.}
+  
+  \item{t.complexfct}{ a real number (default to 0.0); the same as s.complexfct except for the trend component and the number of trend changepoints.}
+  
  %%%%%%%%%%%%%%%%%%%%%	
   
   \item{method}{ a string (default to 'bayes'); specify the method for formulating model posterior probability.

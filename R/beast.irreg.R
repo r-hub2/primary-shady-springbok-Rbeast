@@ -10,6 +10,8 @@ beast.irreg <- function(
 					tcp.minmax = c(0,10), torder.minmax=c(0,1), 
 					sseg.min   = NULL, sseg.leftmargin = NULL,  sseg.rightmargin = NULL, 
 					tseg.min   = NULL, tseg.leftmargin = NULL,  tseg.rightmargin = NULL, 
+					s.complexfct   = 0.0,
+					t.complexfct   = 0.0,
 					method         = c('bayes','bic', 'aic','aicc','hic','bic0.25','bic0.5','bic1.5','bic2'),
 					detrend        = FALSE, 
 					deseasonalize  = FALSE,
@@ -118,6 +120,10 @@ beast.irreg <- function(
    prior$K_MAX              = 0
    prior$precValue          = precValue
    prior$precPriorType      = precPriorType
+
+   prior$seasonComplexityFactor = s.complexfct;
+   prior$trendComplexityFactor  = t.complexfct;   
+   if ( hasArg('modelprior') )      prior$modelPriorType	        = list(...)[['modelprior']]     
    
 #......End of displaying pripr ......
 

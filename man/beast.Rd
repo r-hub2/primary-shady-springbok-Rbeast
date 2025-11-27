@@ -23,7 +23,7 @@
    % package frailtyMMpen::frailtyMM.Rd:  the folllowing passes the check.
    %\if{html}{\figure{fig1.png}{options: style="width:750px;max-width:75\%;"}}
    
-   \if{html}{\figure{Nile.jpg}{options:  width="95\%"  style="width:80\%;max-width:95\%" alt="Figure: Nile.jpg"}}
+   \if{html}{\figure{Nile.jpg}{options:  style="width:80\%;max-width:95\%" alt="Figure: Nile.jpg"}}
    \if{latex}{\figure{Nile.pdf}{options: width=10cm}}
   }
 \usage{
@@ -37,6 +37,8 @@
          tcp.minmax     = c(0,10), torder.minmax   = c(0,1), 	   
 	     sseg.min       = NULL,    sseg.leftmargin = NULL,  sseg.rightmargin = NULL,
 	     tseg.min       = NULL,    tseg.leftmargin = NULL,  tseg.rightmargin = NULL, 
+	     s.complexfct   = 0.0,
+	     t.complexfct   = 0.0,		 
          method         = c( 'bayes',   'bic',    'aic',    'aicc', 'hic',
 	                          'bic0.25', 'bic0.5', 'bic1.5', 'bic2'  ),	 
          detrend        = FALSE, 
@@ -116,6 +118,12 @@
   \item{tseg.leftmargin}{ an integer (>=0); the number of leftmost data points excluded for trend changepoint detection. That is, when fitting a piecewise polynomial trend model, no changepoints are allowed in the starting window/segment of length \code{tseg.leftmargin}. \code{tseg.leftmargin} must be an unitless integer--the number of time intervals/data points so that the time window in the original unit is \code{tseg.leftmargin*deltat}. If missing, \code{tseg.leftmargin} defaults to \code{tseg.min}.}
   
   \item{tseg.rightmargin}{ an integer (>=0); the number of rightmost data points excluded for trend changepoint detection. That is, when fitting a piecewise polynomial trend model, no changepoints are allowed in the ending window/segment of length \code{tseg.rightmargin}. \code{tseg.rightmargin} must be an unitless integer--the number of time intervals/data points so that the time window in the original unit is \code{tseg.rightmargin*deltat}. If missing, \code{tseg.rightmargin} defaults to \code{tseg.min}.}  
+
+%%%%%%%%%%%%%%%%%%%%%	
+  
+  \item{s.complexfct}{ a real number (default to 0.0); a prior hyperparameter controlling the complexity of the seasonal curve or the number of seasonal changepoints. A prior of form \eqn{exp[-\lambda*(k+1)]} is elicited on the number of seasonal changepoints (i.e., model dimensions) where \eqn{k}) is the number of changepoints and \eqn{\lambda} is \code{s.complexfct}. \eqn{\lambda=0}) (the default value) gives an non-informative prior so that all the model dimensions are equally probabe a prior.If needed, users are recommended to manually tune it with the range of [-20.0, 20.0]. Values smaller than zero (e.g., \eqn{\lambda=-15.9}) gives fewer  changepoints or simpler seasonal curves(i.e., parsimonious seasonal model) whereas postive values (e.g., \eqn{\lambda=19.6}) give more changepoints or more complex curves.}
+  
+  \item{t.complexfct}{ a real number (default to 0.0); the same as s.complexfct except for the trend component and the number of trend changepoints.}
 
  %%%%%%%%%%%%%%%%%%%%%	
   
@@ -446,6 +454,10 @@ library(Rbeast)
      torder.minmax  = c(0,1), # Min and maxx polynomial orders to fit trend
      tseg.min       = 24,     # The min length of segments btw neighboring trend chnpts
      tseg.leftmargin= 10,     # No trend chgpts allowed in the starting 10 datapoints
+     s.complexfct   = 0.26,   # Manually tune it to fit a more complex seasonal curve
+	                          #  than the non-informative prior on number of changepts
+     t.complexfct   = -5.2,   # Manually tune it to fit a more complex trend curve
+	                          #  than the non-informative prior on number of changepts 
      deseasonalize  = TRUE,   # Remove the global seasonality before fitting the beast model
      detrend        = TRUE,   # Remove the global trend before fitting the beast model
      mcmc.seed      = 0,      # A seed for mcmc's random nummber generator; use a
@@ -599,6 +611,11 @@ library(Rbeast)
   out    = beast(births,start=c(1946,1,15), deltat=1/12, freq  =12 )  
   out    = beast(births,start=c(1946,1,15), deltat=1/12, period=1.0 )  
   plot(out)  
+
+  # Fit the seasonal component using a singular-value-decompostion-based basis functions
+  # rathat than the default harmonic sin/cos basis functions.
+  out    = beast(births,start=c(1946,1,15), deltat=1/12, period=1.0, season="svd" )  
+  plot(out)    
   
 }
 
@@ -681,9 +698,12 @@ library(Rbeast)
 # trend
 \dontrun{ 
  NileVec        = as.vector(Nile)
- NileVec[50]    = NileVec[50] + 1500                   # Add an artificial spike at t=50
+ NileVec[50]    = NileVec[50] + 1500                 # Add an large artificial spike at t=50
  o = beast(NileVec, season='none', hasOutlier=TRUE)
  plot(o)
+ 
+ o = beast(Nile, season='none', hasOutlier=TRUE)     # Fit a model with outliers
+ plot(o) 
  }
 
 }

@@ -20,7 +20,7 @@
               ...
 			  )
 }
-\arguments{
+\arguments{ 
 
   \item{Y}{ 
   	a 1D vector, 2D matrix, or 3D array of numeric data. Missing values are allowed and can be indicated by \code{NA}, \code{NaN}, or a value customized in the 2nd argument \code{metadata} (e.g., \code{metadata$missingValue=-9999}).	 
@@ -107,6 +107,11 @@
 	    \item \code{prior$seasonMinSepDist}: integer (>0). the min separation time between two neighboring season changepoints. That is, when fitting a piecewise harmonic seasonal model, no two changepoints are allowed to occur within a time window of seasonMinSepDist. \code{seasonMinSepDist} must be an unitless integer--the number of time intervals/data points so that the time window in the original unit is seasonMinSepDist*metadata$deltaTime.
         \item \code{prior$seasonLeftMargin}:  integer (>=0); the number of leftmost data points excluded for seasonal changepoint detection. That is, when fitting a piecewise harmonic seasonal model, no changepoints are allowed in the starting window/segment of length \code{seasonLeftMargin}. \code{seasonLeftMargin} must be an unitless integer--the number of time intervals/data points so that the time window in the original unit is \code{seasonLeftMargin*deltat}. If missing, \code{seasonLeftMargin} defaults to \code{seasonMinSepDist}.
         \item \code{prior$seasonRightMargin}: integer (>=0); the number of rightmost data points excluded for seasonal changepoint detection. That is, when fitting a piecewise harmonic seasonal model, no changepoints are allowed in the ending window/segment of length \code{seasonRightMargin}. \code{seasonRightMargin} must be an unitless integer--the number of time intervals/data points so that the time window in the original unit is \code{seasonRightMargin*deltat}. If missing, \code{seasonRightMargin} defaults to \code{seasonMinSepDist}.  
+		
+%%%%%%%%%%%%%%%%%%%%%	
+		\item \code{prior$seasonComplexityFactor}: numeric (default to 0.0); a prior hyperparameter controlling the complexity of the seasonal curve or the number of seasonal changepoints. A prior of form \eqn{exp[-\lambda*(k+1)]} is elicited on the number of seasonal changepoints (i.e., model dimensions) where \eqn{k}) is the number of changepoints and \eqn{\lambda} is \code{seasonComplexityFactor}. \eqn{\lambda=0}) (the default value) gives an non-informative prior so that all the model dimensions are equally probabe a prior.If needed, users are recommended to manually tune it with the range of [-20.0, 20.0]. Values smaller than zero (e.g., \eqn{\lambda=-15.9}) gives fewer changepoints or simpler seasonal curves(i.e., parsimonious seasonal model) whereas postive values (e.g., \eqn{\lambda=5.76}) give more changepoints or more complex curves.
+ 
+  
   	    \item \code{prior$trendMinOrder}:  integer (>=0)
     	\item \code{prior$trendMaxOrder}:  integer (>=0); the min and max orders of the polynomials considered to fit the trend component. The zero-th order corresponds to a constant term/ a flat line and the 1st order is a line. If \code{trendMinOrder}=\code{trendMaxOrder}, BEAST assumes a constant polynomial order used and won't infer the posterior probability of polynomial orders.
   	    \item \code{prior$trendMinKnotNum}: 
@@ -114,6 +119,10 @@
 	    \item \code{prior$trendMinSepDist}:  integer (>0). the min separation time between two neighboring trend changepoints.
 		\item \code{prior$trendLeftMargin}:  integer (>=0); the number of leftmost data points excluded for trend changepoint detection. That is, when fitting a piecewise polynomial trend model, no changepoints are allowed in the starting window/segment of length \code{trendLeftMargin}. \code{trendLeftMargin} must be an unitless integer--the number of time intervals/data points so that the time window in the original unit is \code{trendLeftMargin*deltat}. If missing, \code{trendLeftMargin} defaults to \code{trendMinSepDist}. 
         \item \code{prior$trendRightMargin}: integer (>=0); the number of rightmost data points excluded for trend changepoint detection. That is, when fitting a piecewise polynomial trend model, no changepoints are allowed in the ending window/segment of length \code{trendRightMargin}. \code{trendRightMargin} must be an unitless integer--the number of time intervals/data points so that the time window in the original unit is \code{trendRightMargin*deltat}. If missing, \code{trendRightMargin} defaults to \code{trendMinSepDist}.
+
+%%%%%%%%%%%%%%%%%%%%%	
+		\item \code{prior$trendComplexityFactor}: numeric (default to 0.0); a prior hyperparameter controlling the complexity of the trend curve or the number of trend changepoints. A prior of form \eqn{exp[-\lambda*(k+1)]} is elicited on the number of trend changepoints (i.e., model dimensions) where \eqn{k}) is the number of changepoints and \eqn{\lambda} is \code{trendComplexityFactor}. \eqn{\lambda=0}) (the default value) gives an non-informative prior so that all the model dimensions are equally probabe a prior.If needed, users are recommended to manually tune it with the range of [-20.0, 20.0]. Values smaller than zero (e.g., \eqn{\lambda=-15.9}) gives fewer changepoints or simpler trend curves(i.e., parsimonious trend model) whereas postive values (e.g., \eqn{\lambda=5.76}) give more changepoints or more complex curves.		
+		
 		\item \code{prior$precValue}:     numeric (>0); the default value is 10. Useful only if prior$precPriorType='constant'
 	    \item \code{prior$precPriorType}: characters. It takes one of 'constant', 'uniform' (the default),  'componentwise', and 'orderwise'. Below are the differences between them.
 			\enumerate{
