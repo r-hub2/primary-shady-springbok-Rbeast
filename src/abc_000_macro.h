@@ -7,7 +7,6 @@
 #define MATLAB_LIBRARY  0 
 #define PCGRAND_LIBRARY 1
 #define MKLRAND_LIBRARY 0
-//#define  R_RELEASE
 #ifdef R_RELEASE
 		#undef   R_INTERFACE
 		#undef   M_INTERFACE
@@ -21,8 +20,7 @@
 	    #define MKL_LIBRARY   0
 	    #define PCGRAND_LIBRARY 1
         #define MKLRAND_LIBRARY 0
-#endif
-#ifdef P_RELEASE
+#elif  defined(P_RELEASE)
 		#undef   R_INTERFACE
 		#undef   M_INTERFACE
 		#undef   P_INTERFACE
@@ -35,8 +33,7 @@
 	    #define MKL_LIBRARY   0
 	    #define PCGRAND_LIBRARY 1
         #define MKLRAND_LIBRARY 0
-#endif
-#ifdef M_RELEASE
+#elif defined(M_RELEASE)
 		#undef   R_INTERFACE
 		#undef   M_INTERFACE
 		#undef   P_INTERFACE
@@ -133,7 +130,7 @@
 #elif defined(__m68k__)
 	#define   cpu_M68K 
 #endif
-#if defined(TARGET_32) && defined (COMPILER_MSVC)
+#if defined(TARGET_32) && defined (COMPILER_MSVC)  
 	#define _CRT_SECURE_NO_WARNINGS
 	#pragma warning (disable: 4703) 
 #endif
@@ -153,21 +150,6 @@
 		#define INLINE     inline
 		#define _restrict __restrict__		
         #define UNUSED_DECORATOR  __attribute__((unused))
-#endif
-#if   defined(OS_LINUX) && ( defined(COMPILER_GCC)||defined(COMPILER_CLANG) )
-	#ifdef _GNU_SOURCE 
-		#include <features.h>
-		#ifndef __USE_GNU
-			#define __MUSL__ 
-		#endif
-	#else
-		#define _GNU_SOURCE
-		#include <features.h>
-		#ifndef __USE_GNU
-		#define __MUSL__ 
-		#endif
-		#undef _GNU_SOURCE 
-	#endif
 #endif
 #ifdef COMPILER_MSVC
     # define ALIGN32_BEG __declspec(align(32))
@@ -255,7 +237,7 @@
 	ENABLE_WARNING(unused-variable,unused-variable,NOT_USED)  \
 	ENABLE_WARNING(pragmas,pragmas,NOT_USED) \
 	ENABLE_WARNING(unknown-pragmas,unknown-pragmas,NOT_USED) 
-#elif defined(COMPILER_CLANG)||1
+#elif defined(COMPILER_CLANG)   
 	#define  DISABLE_MANY_WARNINGS  \
 	DISABLE_WARNING(unknown-pragmas,unknown-pragmas,NOT_USED)  \
 	DISABLE_WARNING(pragmas,pragmas,NOT_USED) \
@@ -326,13 +308,21 @@
           DIAG_DO_PRAGMA(GCC optimization_level 3) \
           DIAG_DO_PRAGMA(GCC optimize("O3,Ofast,inline,omit-frame-pointer,no-asynchronous-unwind-tables")) \
           DIAG_DO_PRAGMA(GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,avx,avx2,fma,tune=haswell"))  
-#define _in_
-#define _inout_
-#define _out_
-#define mv(n,src,dest)	r_cblas_scopy( n,src,1L,dest,1L) 
-#define cp(n,src,dest)    memcpy(dest,src,sizeof(F32)*(size_t)(n))
-#define SCPY(n,src,dest)  memcpy(dest,src,sizeof(F32)*(size_t)(n))
-#define FILL0(dest,n)       memset(dest,0L,sizeof(F32)*(size_t)(n))
+#if  defined(OS_LINUX) && ( defined(COMPILER_GCC)||defined(COMPILER_CLANG) )
+	#ifdef _GNU_SOURCE 
+		#include <features.h>
+		#ifndef __USE_GNU
+			#define __MUSL__ 
+		#endif
+	#else
+		#define _GNU_SOURCE
+		#include <features.h>
+		#ifndef __USE_GNU
+		    #define __MUSL__ 
+		#endif
+		#undef _GNU_SOURCE 
+	#endif
+#endif
 #if defined(__linux__)
   #ifndef _GNU_SOURCE
     #define __TEMP_ENABLE_GNU_SOURCE
@@ -352,3 +342,10 @@
 #else
   #define USING_MUSL 0
 #endif
+#define _in_
+#define _out_
+#define _inout_
+#define mv(n,src,dest)	r_cblas_scopy( n,src,1L,dest,1L) 
+#define cp(n,src,dest)    memcpy(dest,src,sizeof(F32)*(size_t)(n))
+#define SCPY(n,src,dest)  memcpy(dest,src,sizeof(F32)*(size_t)(n))
+#define FILL0(dest,n)       memset(dest,0L,sizeof(F32)*(size_t)(n))

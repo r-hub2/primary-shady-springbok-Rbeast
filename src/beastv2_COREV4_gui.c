@@ -76,9 +76,9 @@ void beast2_main_corev4_gui(void) {
 	const U16PTR  RND16_END=RND16+MAX_RAND_NUM * 2 - 7;
 	const U08PTR  RND08_END=RND08+MAX_RAND_NUM * 4 - 7 -3;     
 	const F32PTR  RNDGAMMA_END=RNDGAMMA+MAX_RAND_NUM - MODEL.precState.nPrecGrp-1L;
-	const F32PTR Xt_mars;
-	const F32PTR Xnewterm;      
-	const F32PTR Xt_zeroBackup; 
+	F32PTR Xt_mars;       
+	F32PTR Xnewterm;      
+	F32PTR Xt_zeroBackup; 
 	AllocateXXXMEM(&Xt_mars,&Xnewterm,&Xt_zeroBackup,&MODEL,opt,&MEM);
 	BEAST2_YINFO     yInfo;
 	AllocateYinfoMEM(&yInfo,opt,&MEM);

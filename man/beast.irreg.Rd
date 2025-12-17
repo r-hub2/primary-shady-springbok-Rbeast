@@ -442,6 +442,10 @@
             Analogous to the trend component, but for seasonal changepoints that correspond to positive vs. negative jumps in the seasonal signal.
     }
   }
+  
+ \item{outlier}{
+   \code{outlier} is a \code{list} analogous to \code{trend} or \code{season}, but for the outlier component ( present only if setting \code{hasOutlier=TRUE})
+  } %\item{outlier}  
 
 }
 
@@ -462,20 +466,28 @@
     \item \code{beast123()} exposes a low-level interface via four lists: \code{metadata}, \code{prior}, \code{mcmc}, and \code{extra}.
   }
 
-  There is a one-to-one correspondence between arguments of \code{beast()} / \code{beast.irreg()} and fields in \code{metadata}, \code{prior}, \code{mcmc}, and \code{extra} used by \code{beast123()}, for example:
-
-  \code{start            <->   metadata$startTime}\cr
-  \code{deltat           <->   metadata$deltaTime}\cr
-  \code{deseasonalize    <->   metadata$deseasonalize}\cr
-  \code{hasOutlier       <->   metadata$hasOutlierCmpnt}\cr
-  \code{scp.minmax[1]    <->   prior$seasonMinOrder}\cr
-  \code{scp.minmax[2]    <->   prior$seasonMaxOrder}\cr
-  \code{sseg.min         <->   prior$seasonMinSepDist}\cr
-  \code{torder.minmax[1] <->   prior$trendMinOrder}\cr
-  \code{tseg.leftmargin  <->   prior$trendLeftMargin}\cr
-  \code{mcmc.seed        <->   mcmc$seed}\cr
-  \code{dump.ci          <->   extra$computeCredible}\cr
-
+  There is a one-to-one correspondence between arguments of \code{beast()} / \code{beast.irreg()} and fields in \code{metadata}, \code{prior}, \code{mcmc}, and \code{extra} used by \code{beast123()}, Examples include:
+  \cr
+  %\format{
+	  \tabular{lcl}{
+		\code{start}             \tab <-> \tab \code{metadata$startTime} \cr
+		\code{deltat}            \tab <-> \tab \code{metadata$deltaTime} \cr
+		\code{deseasonalize}     \tab <-> \tab \code{metadata$deseasonalize} \cr
+		\code{hasOutlier}        \tab <-> \tab \code{metadata$hasOutlier}\cr
+		\code{scp.minmax[1:2]}   \tab <-> \tab \code{prior$seasonMinKnotNum, prior$seasonMaxKnotNum}\cr
+		\code{sorder.minmax[1:2]} \tab <-> \tab  \code{prior$seasonMinOrder, prior$seasonMaxOrder}\cr
+		\code{sseg.min}           \tab <-> \tab \code{prior$seasonMinSepDist}\cr
+		\code{tcp.minmax[1:2]}    \tab <-> \tab \code{prior$trendMinKnotNum, prior$trendMaxKnotNum}\cr
+		\code{torder.minmax[1:2]} \tab <-> \tab \code{prior$trendMinOrder, prior$trendMaxOrder}\cr
+		\code{tseg.leftmargin}    \tab <-> \tab \code{prior$trendLeftMargin}\cr
+		\code{tseg.rightmargin}  \tab <-> \tab \code{prior$trendRightMargin}\cr
+		\code{s.complexfct}      \tab <-> \tab \code{prior$seasonComplexityFactor}\cr
+		\code{t.complexfct}      \tab <-> \tab \code{prior$trendComplexityFactor}\cr
+		\code{mcmc.seed}         \tab <-> \tab \code{mcmc$seed}\cr
+		\code{dump.ci}           \tab <-> \tab \code{extra$computeCredible}.\cr
+	  }
+  %} %\format
+ 
   Advanced users who need full control over all internal options are encouraged to use \code{beast123()} directly.
 }
 

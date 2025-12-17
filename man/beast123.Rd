@@ -399,6 +399,10 @@ beast123(
       Seasonal analogues of the trend outputs with the same names, but restricted to seasonal changepoints with positive (\code{pos_*}) or negative (\code{neg_*}) jumps in the seasonal component. For example, \code{pos_ncp} refers to the average number of seasonal changepoints that jump up (i.e., positively) in the seasonal curve.
     }
   }
+  
+ \item{outlier}{
+   \code{outlier} is a \code{list} analogous to \code{trend} or \code{season}, but for the outlier component ( present only if setting \code{hasOutlier=TRUE})
+  } %\item{outlier}  
 }
 
 \seealso{

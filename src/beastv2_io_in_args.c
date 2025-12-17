@@ -972,6 +972,16 @@ I32 PostCheckArgs(A(OPTIONS_PTR) opt) {
 		opt->prior.precPriorType=UniformPrec;
 	}
 	opt->extra.printProgress=GLOBAL_PRNT_PROGRESS;
+	if (opt->io.q > 1) {
+		opt->extra.computeSeasonAmp=0;
+		opt->extra.computeTrendSlope=0;
+		opt->extra.tallyIncDecTrendJump=0;
+		opt->extra.tallyPosNegTrendJump=0;
+		opt->extra.tallyPosNegOutliers=0;
+		opt->extra.tallyPosNegSeasonJump=0;
+		opt->extra.computeTrendChngpt=1;
+		opt->extra.computeSeasonChngpt=1;
+	}
 	return 1;
 }
 int BEAST2_GetArgs(VOIDPTR prhs[],int nrhs,A(OPTIONS_PTR) opt) {

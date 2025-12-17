@@ -371,6 +371,11 @@ The result is an object of class \code{"beast"}, i.e., a list with structure ide
       Seasonal analogues of the trend outputs with the same names, restricted to seasonal changepoints with positive (\code{pos_*}) or negative (\code{neg_*}) jumps in the seasonal curve. For example, \code{pos_ncp} refers to the average number of seasonal changepoints at which the seasonal component jumps up.
   }
   }
+  
+ \item{outlier}{
+   \code{outlier} is a \code{list} analogous to \code{trend} or \code{season}, but for the outlier component ( present only if setting \code{hasOutlier=TRUE})
+  } %\item{outlier}
+  
 }
 
 \seealso{
@@ -384,23 +389,27 @@ The result is an object of class \code{"beast"}, i.e., a list with structure ide
 \note{
 The three functions \code{beast()}, \code{beast.irreg()}, and \code{beast123()} implement the same BEAST algorithm but with different APIs. There is a one-to-one correspondence between (1) the arguments of \code{beast()} / \code{beast.irreg()} and (2) the \code{metadata}, \code{prior}, \code{mcmc}, and \code{extra} lists used by \code{beast123()}. Examples include:
 \cr
-\code{start            <-> metadata$startTime}\cr
-\code{deltat           <-> metadata$deltaTime}\cr
-\code{deseasonalize    <-> metadata$deseasonalize}\cr
-\code{hasOutlier       <-> metadata$hasOutlier}\cr
-\code{scp.minmax[1:2]  <-> prior$seasonMinKnotNum, prior$seasonMaxKnotNum}\cr
-\code{sorder.minmax[1:2] <-> prior$seasonMinOrder, prior$seasonMaxOrder}\cr
-\code{sseg.min         <-> prior$seasonMinSepDist}\cr
-\code{tcp.minmax[1:2]  <-> prior$trendMinKnotNum, prior$trendMaxKnotNum}\cr
-\code{torder.minmax[1:2] <-> prior$trendMinOrder, prior$trendMaxOrder}\cr
-\code{tseg.leftmargin  <-> prior$trendLeftMargin}\cr
-\code{tseg.rightmargin <-> prior$trendRightMargin}\cr
-\code{s.complexfct     <-> prior$seasonComplexityFactor}\cr
-\code{t.complexfct     <-> prior$trendComplexityFactor}\cr
-\code{mcmc.seed        <-> mcmc$seed}\cr
-\code{dump.ci          <-> extra$computeCredible}\cr
+	%\format{
+	  \tabular{lcl}{
+		\code{start}             \tab <-> \tab \code{metadata$startTime} \cr
+		\code{deltat}            \tab <-> \tab \code{metadata$deltaTime} \cr
+		\code{deseasonalize}     \tab <-> \tab \code{metadata$deseasonalize} \cr
+		\code{hasOutlier}        \tab <-> \tab \code{metadata$hasOutlier}\cr
+		\code{scp.minmax[1:2]}   \tab <-> \tab \code{prior$seasonMinKnotNum, prior$seasonMaxKnotNum}\cr
+		\code{sorder.minmax[1:2]} \tab <-> \tab  \code{prior$seasonMinOrder, prior$seasonMaxOrder}\cr
+		\code{sseg.min}           \tab <-> \tab \code{prior$seasonMinSepDist}\cr
+		\code{tcp.minmax[1:2]}    \tab <-> \tab \code{prior$trendMinKnotNum, prior$trendMaxKnotNum}\cr
+		\code{torder.minmax[1:2]} \tab <-> \tab \code{prior$trendMinOrder, prior$trendMaxOrder}\cr
+		\code{tseg.leftmargin}    \tab <-> \tab \code{prior$trendLeftMargin}\cr
+		\code{tseg.rightmargin}  \tab <-> \tab \code{prior$trendRightMargin}\cr
+		\code{s.complexfct}      \tab <-> \tab \code{prior$seasonComplexityFactor}\cr
+		\code{t.complexfct}      \tab <-> \tab \code{prior$trendComplexityFactor}\cr
+		\code{mcmc.seed}         \tab <-> \tab \code{mcmc$seed}\cr
+		\code{dump.ci}           \tab <-> \tab \code{extra$computeCredible}.\cr
+	  }
+	%} %\format
+ 
 
-\cr
 For large data sets, irregular time series, or stacked images, \code{beast123()} is generally the recommended interface.
 }
 

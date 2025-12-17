@@ -179,5 +179,4 @@ void i64_QuickSortD(I64PTR arr,I32 low,I32 high,I32PTR INDEX) {
 		i64_QuickSortD(arr,pi+1,high,INDEX);
 	}
 }
-  
 #include "abc_000_warning.h"
