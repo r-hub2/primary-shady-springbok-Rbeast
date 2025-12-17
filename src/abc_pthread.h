@@ -124,7 +124,7 @@ extern int GetNumCores(void);
     static INLINE int  pthread_create(pthread_t* tid,const pthread_attr_t* attr,void* (*start) (void*),void* arg) {
         return  pthread_create0(tid,attr,start,arg);
     }
-#elif   defined(OS_LINUX) && 1
+#elif   defined(OS_LINUX)  
 	    #ifndef _GNU_SOURCE
 		    #define _GNU_SOURCE  
 	    #endif

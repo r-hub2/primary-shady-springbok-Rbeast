@@ -8,50 +8,50 @@
 #define PCGRAND_LIBRARY 1
 #define MKLRAND_LIBRARY 0
 #ifdef R_RELEASE
-		#undef   R_INTERFACE
-		#undef   M_INTERFACE
-		#undef   P_INTERFACE
-		#define  R_INTERFACE 1
-		#define  M_INTERFACE 0
+        #undef   R_INTERFACE
+        #undef   M_INTERFACE
+        #undef   P_INTERFACE
+        #define  R_INTERFACE 1
+        #define  M_INTERFACE 0
         #define  P_INTERFACE 0
-		#undef   MYMAT_LIBRARY
-	    #undef   MKL_LIBRARY
-		#define MYMAT_LIBRARY 1
-	    #define MKL_LIBRARY   0
-	    #define PCGRAND_LIBRARY 1
+        #undef   MYMAT_LIBRARY
+        #undef   MKL_LIBRARY
+        #define MYMAT_LIBRARY 1
+        #define MKL_LIBRARY   0
+        #define PCGRAND_LIBRARY 1
         #define MKLRAND_LIBRARY 0
 #elif  defined(P_RELEASE)
-		#undef   R_INTERFACE
-		#undef   M_INTERFACE
-		#undef   P_INTERFACE
-		#define  R_INTERFACE 0
-		#define  M_INTERFACE 0
+        #undef   R_INTERFACE
+        #undef   M_INTERFACE
+        #undef   P_INTERFACE
+        #define  R_INTERFACE 0
+        #define  M_INTERFACE 0
         #define  P_INTERFACE 1
-		#undef   MYMAT_LIBRARY
-	    #undef   MKL_LIBRARY
-		#define MYMAT_LIBRARY 1
-	    #define MKL_LIBRARY   0
-	    #define PCGRAND_LIBRARY 1
+        #undef   MYMAT_LIBRARY
+        #undef   MKL_LIBRARY
+        #define MYMAT_LIBRARY 1
+        #define MKL_LIBRARY   0
+        #define PCGRAND_LIBRARY 1
         #define MKLRAND_LIBRARY 0
 #elif defined(M_RELEASE)
-		#undef   R_INTERFACE
-		#undef   M_INTERFACE
-		#undef   P_INTERFACE
-		#define  R_INTERFACE 0
-		#define  M_INTERFACE 1
+        #undef   R_INTERFACE
+        #undef   M_INTERFACE
+        #undef   P_INTERFACE
+        #define  R_INTERFACE 0
+        #define  M_INTERFACE 1
         #define  P_INTERFACE 0
-		#undef   MYMAT_LIBRARY
-	    #undef   MKL_LIBRARY
-		#define MYMAT_LIBRARY 1
-	    #define MKL_LIBRARY   0
-	    #define PCGRAND_LIBRARY 1
+        #undef   MYMAT_LIBRARY
+        #undef   MKL_LIBRARY
+        #define MYMAT_LIBRARY 1
+        #define MKL_LIBRARY   0
+        #define PCGRAND_LIBRARY 1
         #define MKLRAND_LIBRARY 0
         #ifndef MATLAB_MEX_FILE
-			#define MATLAB_MEX_FILE
+            #define MATLAB_MEX_FILE
         #endif
         #define MATLAB_DEFAULT_RELEASE  R2017b
 #endif
-#ifdef _MSC_VER
+#ifdef   _MSC_VER
 	#define COMPILER_MSVC
 #elif defined(__clang__)
 	#define COMPILER_CLANG
@@ -293,10 +293,11 @@
 	#define  ENABLE_MANY_WARNINGS 	
 #endif
 #ifdef _WIN32_WINNT
-#undef  _WIN32_WINNT
-#define _WIN32_WINNT 0x0601
+	#undef  _WIN32_WINNT
+	#define _WIN32_WINNT 0x0601
 #endif
 #include <stdint.h>
+#undef _FEATURES_H
 #if   INTPTR_MAX==INT32_MAX
 	#define TARGET_32
 #elif INTPTR_MAX==INT64_MAX

@@ -17,7 +17,7 @@
 #include "abc_rand.h"
 #include "abc_vec.h"   
 #include "abc_math.h"  
-#include <stdio.h>	               
+#include <stdio.h>	   
 #include "globalvars.h"  
 #include "beastv2_header.h"
 #include "beastv2_func.h" 
@@ -52,7 +52,7 @@ int beast2_main_corev4(void)   {
 	const U16PTR  RND16_END=RND16+MAX_RAND_NUM * 2 - 7;
 	const U08PTR  RND08_END=RND08+MAX_RAND_NUM * 4 - 7 -3;     
 	const F32PTR  RNDGAMMA_END=RNDGAMMA+MAX_RAND_NUM - MODEL.precState.nPrecGrp-1L;
-	F32PTR Xt_mars;
+	F32PTR Xt_mars;       
 	F32PTR Xnewterm;      
 	F32PTR Xt_zeroBackup; 
 	AllocateXXXMEM(&Xt_mars,&Xnewterm,&Xt_zeroBackup,&MODEL,opt,&MEM);
