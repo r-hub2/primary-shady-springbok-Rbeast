@@ -51,6 +51,10 @@
         #endif
         #define MATLAB_DEFAULT_RELEASE  R2017b
 #endif
+#if MYMAT_LIBRARY==1
+		#define PCGRAND_LIBRARY 1
+		#define MKLRAND_LIBRARY 0
+#endif
 #ifdef   _MSC_VER
 	#define COMPILER_MSVC
 #elif defined(__clang__)
@@ -76,18 +80,6 @@
 #endif
 #if defined(sun) && defined(__sun) && defined(__SVR4) 
 	#define OS_SOLARIS
-#endif
-#if _WIN64||__amd64__||defined(__LP64__)||(defined(__x86_64__) &&    !defined(__ILP32__) )||defined(_M_X64)||defined(__ia64)||defined (_M_IA64)||defined(__aarch64__)||defined(__powerpc64__)
-	#define TARGET_64
-#else
-	#define TARGET_32
-#endif
-#if __GNUC__
-	#if __x86_64__||__ppc64__
-		#define TARGET_64
-	#else
-		#define TARGET_32
-	#endif
 #endif
 #if defined(__x86_64__)||defined(_M_X64)
 	#define  cpu_x86_64
@@ -130,13 +122,29 @@
 #elif defined(__m68k__)
 	#define   cpu_M68K 
 #endif
-#if defined(TARGET_32) && defined (COMPILER_MSVC)  
-	#define _CRT_SECURE_NO_WARNINGS
-	#pragma warning (disable: 4703) 
+#if _WIN64||__amd64__||defined(__LP64__)||(defined(__x86_64__) &&    !defined(__ILP32__) )||defined(_M_X64)||defined(__ia64)||defined (_M_IA64)||defined(__aarch64__)||defined(__powerpc64__)
+	#define TARGET_64
+#else
+	#define TARGET_32
 #endif
-#if MYMAT_LIBRARY==1
-		#define PCGRAND_LIBRARY 1
-		#define MKLRAND_LIBRARY 0
+#if __GNUC__
+	#if __x86_64__||__ppc64__
+		#define TARGET_64
+	#else
+		#define TARGET_32
+	#endif
+#endif
+#ifndef   _GNU_SOURCE 
+   #define  _GNU_SOURCE 
+#endif
+#include <stdint.h>
+#undef _FEATURES_H
+#if   INTPTR_MAX==INT32_MAX
+	#define TARGET_32
+#elif INTPTR_MAX==INT64_MAX
+	#define TARGET_64
+#else
+	#error "Environment not 32 or 64-bit."
 #endif
 #if defined(COMPILER_MSVC)
 		#define INLINE    __inline
@@ -152,11 +160,11 @@
         #define UNUSED_DECORATOR  __attribute__((unused))
 #endif
 #ifdef COMPILER_MSVC
-    # define ALIGN32_BEG __declspec(align(32))
+    # define ALIGN32_BEG    __declspec(align(32))
     # define ALIGN32_END 
 #else
     # define ALIGN32_BEG
-    # define ALIGN32_END __attribute__((aligned(32)))
+    # define ALIGN32_END   __attribute__((aligned(32)))
 #endif
 	#define DIAG_STR(s) #s
 	#define DIAG_JOINSTR(x,y) DIAG_STR(x ## y)
@@ -292,19 +300,6 @@
 	#define  DISABLE_MANY_WARNINGS 
 	#define  ENABLE_MANY_WARNINGS 	
 #endif
-#ifdef _WIN32_WINNT
-	#undef  _WIN32_WINNT
-	#define _WIN32_WINNT 0x0601
-#endif
-#include <stdint.h>
-#undef _FEATURES_H
-#if   INTPTR_MAX==INT32_MAX
-	#define TARGET_32
-#elif INTPTR_MAX==INT64_MAX
-	#define TARGET_64
-#else
-	#error "Environment not 32 or 64-bit."
-#endif
 #define  CHANGE_TO_AVX_GCC  \
           DIAG_DO_PRAGMA(GCC optimization_level 3) \
           DIAG_DO_PRAGMA(GCC optimize("O3,Ofast,inline,omit-frame-pointer,no-asynchronous-unwind-tables")) \
@@ -350,3 +345,11 @@
 #define cp(n,src,dest)    memcpy(dest,src,sizeof(F32)*(size_t)(n))
 #define SCPY(n,src,dest)  memcpy(dest,src,sizeof(F32)*(size_t)(n))
 #define FILL0(dest,n)       memset(dest,0L,sizeof(F32)*(size_t)(n))
+#if defined (COMPILER_MSVC) && defined(TARGET_32) 
+	#define _CRT_SECURE_NO_WARNINGS
+	#pragma warning (disable: 4703) 
+#endif
+#ifdef _WIN32_WINNT
+	#undef  _WIN32_WINNT
+	#define _WIN32_WINNT 0x0601
+#endif
